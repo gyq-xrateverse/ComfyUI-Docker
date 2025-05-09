@@ -13,7 +13,7 @@ on:
 
 jobs:
   build-and-push:
-    environment: DOCKERHUB_USERNAME
+    environment: beilv
     runs-on: ubuntu-latest
     
     steps:
@@ -24,10 +24,11 @@ jobs:
     #   uses: docker/setup-buildx-action@v2
       
     - name: Login to DockerHub
-      uses: docker/login-action@v2
+      uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        registry: ${{ secrets.HUB }}
+        username: ${{ secrets.USER }}
+        password: ${{ secrets.PASSWORD }}
         
     - name: Get ComfyUI version
       id: comfyui_version
@@ -45,8 +46,8 @@ jobs:
         context: .
         push: true
         tags: |
-          hewenyulucky/comfyui:${{ env.VERSION }}
-          hewenyulucky/comfyui:latest
+          g-chqo4329-docker.pkg.coding.net/clipshop/comfyui/comfyui:${{ env.VERSION }}
+          g-chqo4329-docker.pkg.coding.net/clipshop/comfyui/comfyui:latest
         build-args: |
           PYTHON_VERSION=3.11
           CUDA_VERSION=12.4.1 
