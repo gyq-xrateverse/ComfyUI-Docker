@@ -14,9 +14,11 @@
 # 修改前
 CODING_DOCKER_IMAGE: ${{ secrets.CODING_DOCKER_REGISTRY }}/comfyui
 
-# 修改后  
-CODING_DOCKER_IMAGE: ${{ secrets.CODING_DOCKER_REGISTRY }}/comfyui/comfyui
+# 修改后 (根据正确的推送格式)
+CODING_DOCKER_IMAGE: ${{ secrets.CODING_DOCKER_REGISTRY }}/clipshop/comfyui
 ```
+
+实际推送路径将是：`registry/clipshop/comfyui/comfyui:tag`
 
 ### 2. 推送配置优化
 添加了 `outputs` 配置确保正确推送：
@@ -42,8 +44,10 @@ CODING_DOCKER_TOKEN=4e5312eb7e814acc7bf03bdb321236c3c98564e1
 ## 预期镜像路径
 
 修复后，镜像将推送到：
-- `g-chqo4329-docker.pkg.coding.net/comfyui/comfyui:latest`
-- `g-chqo4329-docker.pkg.coding.net/comfyui/comfyui:版本号`
+- `g-chqo4329-docker.pkg.coding.net/clipshop/comfyui/comfyui:latest`
+- `g-chqo4329-docker.pkg.coding.net/clipshop/comfyui/comfyui:版本号`
+
+推送格式遵循：`registry/clipshop/comfyui/<PACKAGE>:<VERSION>`
 
 ## 验证步骤
 

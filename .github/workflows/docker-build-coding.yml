@@ -18,7 +18,7 @@ on:
 
 env:
   CODING_DOCKER_REGISTRY: ${{ secrets.CODING_DOCKER_REGISTRY }}
-  CODING_DOCKER_IMAGE: ${{ secrets.CODING_DOCKER_REGISTRY }}/comfyui/comfyui
+  CODING_DOCKER_IMAGE: ${{ secrets.CODING_DOCKER_REGISTRY }}/clipshop/comfyui
 
 jobs:
   build-and-push:
@@ -119,13 +119,13 @@ jobs:
           curl -I "https://${{ secrets.CODING_DOCKER_REGISTRY }}/v2/" || echo "仓库连接测试完成"
           echo "测试镜像推送权限..."
           docker pull hello-world:latest || echo "无法拉取测试镜像"
-          docker tag hello-world:latest ${{ env.CODING_DOCKER_IMAGE }}:test || echo "标签创建失败"
+          docker tag hello-world:latest ${{ env.CODING_DOCKER_IMAGE }}/comfyui:test || echo "标签创建失败"
             
       - name: 提取元数据
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.CODING_DOCKER_IMAGE }}
+          images: ${{ env.CODING_DOCKER_IMAGE }}/comfyui
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -185,16 +185,16 @@ jobs:
             IMAGE_ID=$(docker images | grep comfyui | head -n1 | awk '{print $3}')
             echo "找到镜像 ID: $IMAGE_ID"
             
-            # 重新标记主要标签
-            docker tag $IMAGE_ID ${{ env.CODING_DOCKER_IMAGE }}:latest
-            docker tag $IMAGE_ID ${{ env.CODING_DOCKER_IMAGE }}:${{ env.VERSION }}
-            
-            # 推送标签
-            echo "推送 latest 标签..."
-            docker push ${{ env.CODING_DOCKER_IMAGE }}:latest || echo "推送 latest 失败"
-            
-            echo "推送版本标签..."
-            docker push ${{ env.CODING_DOCKER_IMAGE }}:${{ env.VERSION }} || echo "推送版本标签失败"
+                         # 重新标记主要标签 (使用正确的PACKAGE格式)
+             docker tag $IMAGE_ID ${{ env.CODING_DOCKER_IMAGE }}/comfyui:latest
+             docker tag $IMAGE_ID ${{ env.CODING_DOCKER_IMAGE }}/comfyui:${{ env.VERSION }}
+             
+             # 推送标签
+             echo "推送 latest 标签..."
+             docker push ${{ env.CODING_DOCKER_IMAGE }}/comfyui:latest || echo "推送 latest 失败"
+             
+             echo "推送版本标签..."
+             docker push ${{ env.CODING_DOCKER_IMAGE }}/comfyui:${{ env.VERSION }} || echo "推送版本标签失败"
           else
             echo "未找到可推送的镜像"
           fi
