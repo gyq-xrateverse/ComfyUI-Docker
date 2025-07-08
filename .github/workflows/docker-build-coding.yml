@@ -18,7 +18,7 @@ on:
 
 env:
   CODING_DOCKER_REGISTRY: ${{ secrets.CODING_DOCKER_REGISTRY }}
-  CODING_DOCKER_IMAGE: ${{ secrets.CODING_DOCKER_REGISTRY }}/comfyui
+  CODING_DOCKER_IMAGE: ${{ secrets.CODING_DOCKER_REGISTRY }}/comfyui/comfyui
 
 jobs:
   build-and-push:
@@ -117,6 +117,9 @@ jobs:
           docker info
           echo "测试仓库连接..."
           curl -I "https://${{ secrets.CODING_DOCKER_REGISTRY }}/v2/" || echo "仓库连接测试完成"
+          echo "测试镜像推送权限..."
+          docker pull hello-world:latest || echo "无法拉取测试镜像"
+          docker tag hello-world:latest ${{ env.CODING_DOCKER_IMAGE }}:test || echo "标签创建失败"
             
       - name: 提取元数据
         id: meta
@@ -164,20 +167,37 @@ jobs:
             VCS_REF=${{ github.sha }}
           provenance: false
           sbom: false
+          outputs: type=image,push=${{ github.event_name != 'pull_request' }}
         timeout-minutes: 180
         
-      - name: 推送重试机制
+      - name: 手动推送镜像
         if: failure() && github.event_name != 'pull_request'
         run: |
-          echo "构建失败，尝试重新推送..."
+          echo "构建失败，尝试手动推送..."
+          echo "检查本地镜像："
+          docker images | grep comfyui || echo "未找到本地镜像"
+          
           echo "检查镜像标签："
           echo "${{ steps.meta.outputs.tags }}"
           
-          # 尝试重新推送每个标签
-          for tag in ${{ steps.meta.outputs.tags }}; do
-            echo "尝试推送标签: $tag"
-            docker push "$tag" || echo "推送 $tag 失败"
-          done
+          # 尝试重新标记和推送
+          if docker images | grep -q comfyui; then
+            IMAGE_ID=$(docker images | grep comfyui | head -n1 | awk '{print $3}')
+            echo "找到镜像 ID: $IMAGE_ID"
+            
+            # 重新标记主要标签
+            docker tag $IMAGE_ID ${{ env.CODING_DOCKER_IMAGE }}:latest
+            docker tag $IMAGE_ID ${{ env.CODING_DOCKER_IMAGE }}:${{ env.VERSION }}
+            
+            # 推送标签
+            echo "推送 latest 标签..."
+            docker push ${{ env.CODING_DOCKER_IMAGE }}:latest || echo "推送 latest 失败"
+            
+            echo "推送版本标签..."
+            docker push ${{ env.CODING_DOCKER_IMAGE }}:${{ env.VERSION }} || echo "推送版本标签失败"
+          else
+            echo "未找到可推送的镜像"
+          fi
           
       - name: 构建后清理
         if: always()
@@ -206,10 +226,14 @@ jobs:
           ping -c 3 "${{ secrets.CODING_DOCKER_REGISTRY }}" || echo "无法 ping 仓库地址"
           
           echo "=== 常见解决方案 ==="
-          echo "1. 检查 CODING_DOCKER_REGISTRY 格式 (应该是: your-team.coding.net)"
+          echo "1. 检查 CODING_DOCKER_REGISTRY 格式 (应该是: g-chqo4329-docker.pkg.coding.net)"
           echo "2. 检查 CODING_DOCKER_USER 和 CODING_DOCKER_TOKEN 是否正确"
           echo "3. 确认仓库权限设置"
-          echo "4. 检查镜像名称格式"
+          echo "4. 检查镜像名称格式 (应该是: registry/namespace/repository:tag)"
+          echo "5. 当前配置:"
+          echo "   Registry: ${{ secrets.CODING_DOCKER_REGISTRY }}"
+          echo "   Image: ${{ env.CODING_DOCKER_IMAGE }}"
+          echo "   User: ${{ secrets.CODING_DOCKER_USER }}"
 
       - name: 构建状态通知
         if: always()
