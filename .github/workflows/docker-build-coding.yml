@@ -98,6 +98,9 @@ jobs:
             exit 1
           fi
           echo "✅ 所有必需的 Secrets 已配置"
+          echo "仓库地址: ${{ secrets.CODING_DOCKER_REGISTRY }}"
+          echo "镜像名称: ${{ env.CODING_DOCKER_IMAGE }}"
+          echo "用户名: ${{ secrets.CODING_DOCKER_USER }}"
 
       - name: 登录腾讯Coding容器镜像仓库
         if: github.event_name != 'pull_request'
@@ -106,6 +109,14 @@ jobs:
           registry: ${{ secrets.CODING_DOCKER_REGISTRY }}
           username: ${{ secrets.CODING_DOCKER_USER }}
           password: ${{ secrets.CODING_DOCKER_TOKEN }}
+          
+      - name: 验证登录状态
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "验证 Docker 登录状态..."
+          docker info
+          echo "测试仓库连接..."
+          curl -I "https://${{ secrets.CODING_DOCKER_REGISTRY }}/v2/" || echo "仓库连接测试完成"
             
       - name: 提取元数据
         id: meta
@@ -151,8 +162,22 @@ jobs:
             VERSION=${{ env.VERSION }}
             BUILD_DATE=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             VCS_REF=${{ github.sha }}
-          outputs: type=image,push=${{ github.event_name != 'pull_request' }},compression=gzip,compression-level=6
+          provenance: false
+          sbom: false
         timeout-minutes: 180
+        
+      - name: 推送重试机制
+        if: failure() && github.event_name != 'pull_request'
+        run: |
+          echo "构建失败，尝试重新推送..."
+          echo "检查镜像标签："
+          echo "${{ steps.meta.outputs.tags }}"
+          
+          # 尝试重新推送每个标签
+          for tag in ${{ steps.meta.outputs.tags }}; do
+            echo "尝试推送标签: $tag"
+            docker push "$tag" || echo "推送 $tag 失败"
+          done
           
       - name: 构建后清理
         if: always()
@@ -164,6 +189,28 @@ jobs:
           echo "=== 最终磁盘空间 ==="
           df -h
           
+      - name: 诊断推送问题
+        if: failure()
+        run: |
+          echo "=== 推送失败诊断 ==="
+          echo "仓库地址: ${{ secrets.CODING_DOCKER_REGISTRY }}"
+          echo "镜像名称: ${{ env.CODING_DOCKER_IMAGE }}"
+          echo "预期标签:"
+          echo "${{ steps.meta.outputs.tags }}"
+          
+          echo "=== 检查 Docker 配置 ==="
+          docker version
+          docker info | grep -i registry || true
+          
+          echo "=== 检查网络连接 ==="
+          ping -c 3 "${{ secrets.CODING_DOCKER_REGISTRY }}" || echo "无法 ping 仓库地址"
+          
+          echo "=== 常见解决方案 ==="
+          echo "1. 检查 CODING_DOCKER_REGISTRY 格式 (应该是: your-team.coding.net)"
+          echo "2. 检查 CODING_DOCKER_USER 和 CODING_DOCKER_TOKEN 是否正确"
+          echo "3. 确认仓库权限设置"
+          echo "4. 检查镜像名称格式"
+
       - name: 构建状态通知
         if: always()
         run: |
@@ -176,6 +223,6 @@ jobs:
             echo "推送状态: ${{ github.event_name != 'pull_request' && '已推送' || '仅构建' }}"
           else
             echo "❌ ComfyUI Docker 镜像构建失败!"
-            echo "请检查磁盘空间和构建日志"
+            echo "请检查上述诊断信息和构建日志"
             exit 1
           fi 
