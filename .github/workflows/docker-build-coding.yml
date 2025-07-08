@@ -1,0 +1,129 @@
+name: Build and Push ComfyUI Docker Image to Coding
+
+on:
+  workflow_dispatch:  # Manual trigger
+  schedule:
+    # 每月3号凌晨0点运行
+    - cron: '0 0 3 * *'
+  push:
+    tags:
+      - 'v*'
+    branches: 
+      - main
+      - master
+    paths:
+      - 'Dockerfile'
+      - 'scripts/**'
+      - '.github/workflows/docker-build-coding.yml'
+
+env:
+  CODING_DOCKER_REGISTRY: ${{ secrets.CODING_DOCKER_REGISTRY }}
+  CODING_DOCKER_IMAGE: ${{ secrets.CODING_DOCKER_REGISTRY }}/comfyui
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: 获取版本信息
+        id: version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+            echo "IS_TAG=true" >> $GITHUB_ENV
+            echo "Version from tag: $VERSION"
+          else
+            # 获取 ComfyUI 版本
+            git clone https://github.com/comfyanonymous/ComfyUI.git temp_comfyui
+            cd temp_comfyui
+            COMFYUI_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "latest")
+            cd ..
+            rm -rf temp_comfyui
+            
+            COMMIT_SHA=$(git rev-parse --short HEAD)
+            VERSION="${COMFYUI_VERSION}-${COMMIT_SHA}"
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+            echo "IS_TAG=false" >> $GITHUB_ENV
+            echo "Version from ComfyUI: $VERSION"
+          fi
+          
+      - name: 设置Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 检查必需的 Secrets
+        run: |
+          if [ -z "${{ secrets.CODING_DOCKER_REGISTRY }}" ]; then
+            echo "❌ CODING_DOCKER_REGISTRY secret 未配置"
+            exit 1
+          fi
+          if [ -z "${{ secrets.CODING_DOCKER_USER }}" ]; then
+            echo "❌ CODING_DOCKER_USER secret 未配置"
+            exit 1
+          fi
+          if [ -z "${{ secrets.CODING_DOCKER_TOKEN }}" ]; then
+            echo "❌ CODING_DOCKER_TOKEN secret 未配置"
+            exit 1
+          fi
+          echo "✅ 所有必需的 Secrets 已配置"
+
+      - name: 登录腾讯Coding容器镜像仓库
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.CODING_DOCKER_REGISTRY }}
+          username: ${{ secrets.CODING_DOCKER_USER }}
+          password: ${{ secrets.CODING_DOCKER_TOKEN }}
+            
+      - name: 提取元数据
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.CODING_DOCKER_IMAGE }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ env.VERSION }}
+
+      - name: 构建并推送 ComfyUI Docker 镜像
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            PYTHON_VERSION=3.11
+            CUDA_VERSION=12.4.1
+            VERSION=${{ env.VERSION }}
+            BUILD_DATE=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+            VCS_REF=${{ github.sha }}
+        timeout-minutes: 180
+          
+      - name: 构建状态通知
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "✅ ComfyUI Docker 镜像构建成功!"
+            echo "镜像版本: ${{ env.VERSION }}"
+            echo "构建平台: linux/amd64"
+            echo "镜像仓库: ${{ env.CODING_DOCKER_REGISTRY }}"
+            echo "镜像名称: ${{ env.CODING_DOCKER_IMAGE }}"
+            echo "推送状态: ${{ github.event_name != 'pull_request' && '已推送' || '仅构建' }}"
+          else
+            echo "❌ ComfyUI Docker 镜像构建失败!"
+            exit 1
+          fi 
