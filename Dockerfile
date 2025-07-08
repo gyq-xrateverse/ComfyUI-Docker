@@ -42,43 +42,45 @@ RUN ln -sf /usr/bin/python3.11 /usr/bin/python && \
 # Set working directory
 WORKDIR /app
 
-# Clone ComfyUI
-RUN git clone https://github.com/comfyanonymous/ComfyUI.git /app
+# Clone ComfyUI (shallow clone to save space)
+RUN git clone --depth=1 https://github.com/comfyanonymous/ComfyUI.git /app && \
+    rm -rf /app/.git
 
-# Clone required custom nodes
+# Clone required custom nodes (optimized for space)
 RUN mkdir -p /app/custom_nodes && \
     cd /app/custom_nodes && \
-    git clone https://github.com/Comfy-Org/ComfyUI-Manager.git && \
-    git clone https://github.com/kijai/ComfyUI-WanVideoWrapper.git && \
-    git clone https://github.com/kijai/ComfyUI-KJNodes.git && \
-    git clone https://github.com/cubiq/ComfyUI_essentials.git && \
-    git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git && \
-    git clone https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git && \
-    git clone https://github.com/rgthree/rgthree-comfy.git && \
-    git clone https://github.com/crystian/ComfyUI-Crystools.git && \
-    git clone https://github.com/cubiq/ComfyUI_FaceAnalysis.git && \
-    git clone https://github.com/cubiq/ComfyUI_InstantID.git && \
-    git clone https://github.com/cubiq/PuLID_ComfyUI.git && \
-    git clone https://github.com/Fannovel16/comfyui_controlnet_aux.git && \
-    git clone https://github.com/Fannovel16/ComfyUI-Frame-Interpolation.git && \
-    git clone https://github.com/FizzleDorf/ComfyUI_FizzNodes.git && \
-    git clone https://github.com/Gourieff/ComfyUI-ReActor.git && \
-    git clone https://github.com/huchenlei/ComfyUI-layerdiffuse.git && \
-    git clone https://github.com/jags111/efficiency-nodes-comfyui.git && \
-    git clone https://github.com/ltdrdata/ComfyUI-Impact-Pack.git && \
-    git clone https://github.com/ltdrdata/ComfyUI-Impact-Subpack.git && \
-    git clone https://github.com/ltdrdata/ComfyUI-Inspire-Pack.git && \
-    git clone https://github.com/melMass/comfy_mtb.git && \
-    git clone https://github.com/storyicon/comfyui_segment_anything.git && \
-    git clone https://github.com/WASasquatch/was-node-suite-comfyui.git && \
-    git clone https://github.com/chflame163/ComfyUI_LayerStyle.git && \
-    git clone https://github.com/chflame163/ComfyUI_LayerStyle_Advance.git && \
-    git clone https://github.com/shadowcz007/comfyui-mixlab-nodes.git && \
-    git clone https://github.com/yolain/ComfyUI-Easy-Use.git && \
-    git clone https://github.com/kijai/ComfyUI-IC-Light.git && \
-    git clone https://github.com/siliconflow/BizyAir.git && \
-    git clone https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch.git && \
-    git clone https://github.com/lldacing/comfyui-easyapi-nodes.git
+    git clone --depth=1 https://github.com/Comfy-Org/ComfyUI-Manager.git && \
+    git clone --depth=1 https://github.com/kijai/ComfyUI-WanVideoWrapper.git && \
+    git clone --depth=1 https://github.com/kijai/ComfyUI-KJNodes.git && \
+    git clone --depth=1 https://github.com/cubiq/ComfyUI_essentials.git && \
+    git clone --depth=1 https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git && \
+    git clone --depth=1 https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git && \
+    git clone --depth=1 https://github.com/rgthree/rgthree-comfy.git && \
+    git clone --depth=1 https://github.com/crystian/ComfyUI-Crystools.git && \
+    git clone --depth=1 https://github.com/cubiq/ComfyUI_FaceAnalysis.git && \
+    git clone --depth=1 https://github.com/cubiq/ComfyUI_InstantID.git && \
+    git clone --depth=1 https://github.com/cubiq/PuLID_ComfyUI.git && \
+    git clone --depth=1 https://github.com/Fannovel16/comfyui_controlnet_aux.git && \
+    git clone --depth=1 https://github.com/Fannovel16/ComfyUI-Frame-Interpolation.git && \
+    git clone --depth=1 https://github.com/FizzleDorf/ComfyUI_FizzNodes.git && \
+    git clone --depth=1 https://github.com/Gourieff/ComfyUI-ReActor.git && \
+    git clone --depth=1 https://github.com/huchenlei/ComfyUI-layerdiffuse.git && \
+    git clone --depth=1 https://github.com/jags111/efficiency-nodes-comfyui.git && \
+    git clone --depth=1 https://github.com/ltdrdata/ComfyUI-Impact-Pack.git && \
+    git clone --depth=1 https://github.com/ltdrdata/ComfyUI-Impact-Subpack.git && \
+    git clone --depth=1 https://github.com/ltdrdata/ComfyUI-Inspire-Pack.git && \
+    git clone --depth=1 https://github.com/melMass/comfy_mtb.git && \
+    git clone --depth=1 https://github.com/storyicon/comfyui_segment_anything.git && \
+    git clone --depth=1 https://github.com/WASasquatch/was-node-suite-comfyui.git && \
+    git clone --depth=1 https://github.com/chflame163/ComfyUI_LayerStyle.git && \
+    git clone --depth=1 https://github.com/chflame163/ComfyUI_LayerStyle_Advance.git && \
+    git clone --depth=1 https://github.com/shadowcz007/comfyui-mixlab-nodes.git && \
+    git clone --depth=1 https://github.com/yolain/ComfyUI-Easy-Use.git && \
+    git clone --depth=1 https://github.com/kijai/ComfyUI-IC-Light.git && \
+    git clone --depth=1 https://github.com/siliconflow/BizyAir.git && \
+    git clone --depth=1 https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch.git && \
+    git clone --depth=1 https://github.com/lldacing/comfyui-easyapi-nodes.git && \
+    find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
 
 # Copy scripts
 COPY scripts/gather_requirements.py /app/scripts/

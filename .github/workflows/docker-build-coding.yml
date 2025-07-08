@@ -53,8 +53,35 @@ jobs:
             echo "Version from ComfyUI: $VERSION"
           fi
           
+      - name: 清理磁盘空间
+        run: |
+          echo "=== 清理前磁盘空间 ==="
+          df -h
+          echo "=== 清理 Docker 缓存 ==="
+          docker system prune -af --volumes || true
+          echo "=== 清理 APT 缓存 ==="
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+          echo "=== 清理临时文件 ==="
+          sudo rm -rf /tmp/*
+          sudo rm -rf /var/tmp/*
+          echo "=== 清理 GitHub Actions 缓存 ==="
+          sudo rm -rf /home/runner/.cache
+          sudo rm -rf /opt/hostedtoolcache
+          echo "=== 清理后磁盘空间 ==="
+          df -h
+          
       - name: 设置Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: |
+            image=moby/buildkit:v0.12.5
+            network=host
+          config-inline: |
+            [worker.oci]
+              max-parallelism = 1
+            [worker.containerd]
+              max-parallelism = 1
 
       - name: 检查必需的 Secrets
         run: |
@@ -94,6 +121,19 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=${{ env.VERSION }}
 
+      - name: 监控磁盘空间
+        run: |
+          echo "=== 构建前磁盘空间检查 ==="
+          df -h
+          AVAILABLE_GB=$(df / | awk 'NR==2{printf "%.0f", $4/1024/1024}')
+          echo "可用空间: ${AVAILABLE_GB}GB"
+          if [ $AVAILABLE_GB -lt 10 ]; then
+            echo "❌ 警告: 可用磁盘空间不足 10GB，可能导致构建失败"
+            echo "建议清理更多空间或使用更大的 runner"
+          else
+            echo "✅ 磁盘空间充足，可以开始构建"
+          fi
+
       - name: 构建并推送 ComfyUI Docker 镜像
         uses: docker/build-push-action@v5
         with:
@@ -111,7 +151,18 @@ jobs:
             VERSION=${{ env.VERSION }}
             BUILD_DATE=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             VCS_REF=${{ github.sha }}
+          outputs: type=image,push=${{ github.event_name != 'pull_request' }},compression=gzip,compression-level=6
         timeout-minutes: 180
+          
+      - name: 构建后清理
+        if: always()
+        run: |
+          echo "=== 构建后磁盘空间 ==="
+          df -h
+          echo "=== 清理构建缓存 ==="
+          docker system prune -af --volumes || true
+          echo "=== 最终磁盘空间 ==="
+          df -h
           
       - name: 构建状态通知
         if: always()
@@ -125,5 +176,6 @@ jobs:
             echo "推送状态: ${{ github.event_name != 'pull_request' && '已推送' || '仅构建' }}"
           else
             echo "❌ ComfyUI Docker 镜像构建失败!"
+            echo "请检查磁盘空间和构建日志"
             exit 1
           fi 
