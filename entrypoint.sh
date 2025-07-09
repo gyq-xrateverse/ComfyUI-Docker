@@ -48,6 +48,30 @@ if [ "${DOWNLOAD_EXAMPLE_MODELS:-false}" = "true" ]; then
     download_model "https://huggingface.co/lllyasviel/ControlNet-v1-1/resolve/main/control_v11p_sd15_openpose.pth" "/app/models/controlnet"
 fi
 
+# Check and install missing critical packages at runtime
+echo "Checking for missing critical packages..."
+missing_packages=""
+
+# Check each critical package
+python3.11 -c "import sortedcontainers" 2>/dev/null || missing_packages="$missing_packages sortedcontainers==2.4.0"
+python3.11 -c "import pyhocon" 2>/dev/null || missing_packages="$missing_packages pyhocon==0.3.59"
+python3.11 -c "import imagesize" 2>/dev/null || missing_packages="$missing_packages imagesize==1.4.1"
+python3.11 -c "import evalidate" 2>/dev/null || missing_packages="$missing_packages evalidate==2.0.5"
+python3.11 -c "import litelama" 2>/dev/null || missing_packages="$missing_packages litelama==0.1.7"
+python3.11 -c "import pytorch_lightning" 2>/dev/null || missing_packages="$missing_packages pytorch-lightning==2.5.2"
+python3.11 -c "import nunchaku" 2>/dev/null || missing_packages="$missing_packages nunchaku==0.15.4"
+
+# Install missing packages if any
+if [ -n "$missing_packages" ]; then
+    echo "Installing missing packages: $missing_packages"
+    for package in $missing_packages; do
+        echo "Installing $package..."
+        python3.11 -m pip install --no-cache-dir "$package" || echo "Failed to install $package"
+    done
+else
+    echo "All critical packages are already installed."
+fi
+
 # Generate requirements file if it doesn't exist
 if [ ! -f "/app/requirements.txt" ] || [ "${REGENERATE_REQUIREMENTS:-false}" = "true" ]; then
     echo "Generating requirements.txt..."
