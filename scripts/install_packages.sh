@@ -33,11 +33,26 @@ install_package() {
 install_package "dlib" "19.24.2"
 install_package "insightface" "0.7.3"
 install_package "fairscale" "0.4.13"
+install_package "pytorch-lightning" "2.5.2"
+install_package "voluptuous" "0.15.2"
+install_package "gguf" "0.17.1"
+install_package "nunchaku" "0.15.4"
+install_package "imagesize" "1.4.1"
+install_package "argostranslate" "1.9.6"
+install_package "litelama" "0.1.7"
+install_package "evalidate" "2.0.5"
+install_package "bizyengine" "1.2.33"
+install_package "sortedcontainers" "2.4.0"
+install_package "pyhocon" "0.3.59"
+install_package "fal-client" "0.6.0"
 
 # Try to install the main requirements
 echo "Installing main requirements..."
 # Use --no-deps for specific problematic packages
-python3.11 -m pip install --no-cache-dir --no-deps insightface==0.7.3 dlib==19.24.2 fairscale==0.4.13 || true
+python3.11 -m pip install --no-cache-dir --no-deps insightface==0.7.3 dlib==19.24.2 fairscale==0.4.13 \
+    pytorch-lightning==2.5.2 voluptuous==0.15.2 gguf==0.17.1 nunchaku==0.15.4 imagesize==1.4.1 \
+    argostranslate==1.9.6 litelama==0.1.7 evalidate==2.0.5 bizyengine==1.2.33 \
+    sortedcontainers==2.4.0 pyhocon==0.3.59 fal-client==0.6.0 || true
 python3.11 -m pip install --no-cache-dir -r /app/requirements.txt || {
     echo "Main requirements installation failed, trying with --ignore-installed flag..."
     python3.11 -m pip install --no-cache-dir --ignore-installed -r /app/requirements.txt || {

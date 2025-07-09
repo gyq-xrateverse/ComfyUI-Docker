@@ -10,3 +10,6 @@ argostranslate==1.9.6
 litelama==0.1.7
 evalidate==2.0.5
 bizyengine==1.2.33
+sortedcontainers==2.4.0
+pyhocon==0.3.59
+fal-client==0.6.0

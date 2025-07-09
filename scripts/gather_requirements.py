@@ -38,6 +38,14 @@ REPO_REQUIREMENTS = [
     "https://github.com/kijai/ComfyUI-IC-Light/raw/main/requirements.txt",
     "https://github.com/siliconflow/BizyAir/raw/master/requirements.txt",
     "https://github.com/lldacing/comfyui-easyapi-nodes/raw/master/requirements.txt",
+    # 新增的自定义节点 requirements
+    "https://github.com/aptx4869ntu/ComfyUI-Apt_Preset/raw/main/requirements.txt",
+    "https://github.com/MinusZoneAI/ComfyUI-MingNodes/raw/main/requirements.txt",
+    "https://github.com/kijai/ComfyUI-FluxTrainer/raw/main/requirements.txt",
+    "https://github.com/Phando/ComfyUI-nunchaku/raw/main/requirements.txt",
+    "https://github.com/AlexanderDzhoganov/comfyui-dream-video-batches/raw/main/requirements.txt",
+    "https://github.com/kijai/ComfyUI-3D-Pack/raw/main/requirements.txt",
+    "https://github.com/kealiu/comfyui-supir/raw/main/requirements.txt",
 ]
 
 # Additional packages that might be needed
@@ -50,13 +58,29 @@ ADDITIONAL_PACKAGES = [
     "opencv-contrib-python==4.8.0.76",
     "sageattention==1.0.6",
     "bizyengine==1.2.4",
+    # 从错误日志中识别的缺失包
+    "sortedcontainers==2.4.0",
+    "pyhocon==0.3.59",
+    "fal-client==0.6.0",
 ]
 
 # Packages to exclude (will be installed separately)
 EXCLUDED_PACKAGES = [
     "insightface",
-    "dlib",
+    "dlib", 
     "fairscale",
+    "pytorch-lightning",
+    "voluptuous",
+    "gguf",
+    "nunchaku",
+    "imagesize",
+    "argostranslate",
+    "litelama",
+    "evalidate",
+    "bizyengine",
+    "sortedcontainers",
+    "pyhocon",
+    "fal-client",
 ]
 
 def parse_requirement(req_str):
