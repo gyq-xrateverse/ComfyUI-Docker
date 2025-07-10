@@ -2,8 +2,8 @@
 set -e
 
 echo "Upgrading pip and installing wheel and setuptools..."
-python3.10 -m pip install --no-cache-dir --upgrade pip
-python3.10 -m pip install --no-cache-dir wheel setuptools
+python3.11 -m pip install --no-cache-dir --upgrade pip
+python3.11 -m pip install --no-cache-dir wheel setuptools
 
 # Function to install a package with multiple fallback methods
 install_package() {
@@ -14,15 +14,15 @@ install_package() {
     
     # Try method 1: Install from binary wheel
     echo "Method 1: Installing $package==$version from binary wheel..."
-    python3.10 -m pip install --no-cache-dir "$package==$version" --only-binary=:all: && return 0
+    python3.11 -m pip install --no-cache-dir "$package==$version" --only-binary=:all: && return 0
     
     # Try method 2: Install with no build isolation
     echo "Method 2: Installing $package==$version with --no-build-isolation..."
-    python3.10 -m pip install --no-cache-dir --no-build-isolation "$package==$version" && return 0
+    python3.11 -m pip install --no-cache-dir --no-build-isolation "$package==$version" && return 0
     
     # Try method 3: Install with no dependencies
     echo "Method 3: Installing $package==$version with --no-deps..."
-    python3.10 -m pip install --no-cache-dir --no-deps "$package==$version" && return 0
+    python3.11 -m pip install --no-cache-dir --no-deps "$package==$version" && return 0
     
     # If all methods fail, just continue
     echo "Warning: Failed to install $package==$version, continuing anyway..."
@@ -49,13 +49,13 @@ install_package "fal-client" "0.6.0"
 # Try to install the main requirements
 echo "Installing main requirements..."
 # Use --no-deps for specific problematic packages
-python3.10 -m pip install --no-cache-dir --no-deps insightface==0.7.3 dlib==19.24.2 fairscale==0.4.13 \
+python3.11 -m pip install --no-cache-dir --no-deps insightface==0.7.3 dlib==19.24.2 fairscale==0.4.13 \
     pytorch-lightning==2.5.2 voluptuous==0.15.2 gguf==0.17.1 nunchaku==0.15.4 imagesize==1.4.1 \
     argostranslate==1.9.6 litelama==0.1.7 evalidate==2.0.5 bizyengine==1.2.33 \
     sortedcontainers==2.4.0 pyhocon==0.3.59 fal-client==0.6.0 || true
-python3.10 -m pip install --no-cache-dir -r /app/requirements.txt || {
+python3.11 -m pip install --no-cache-dir -r /app/requirements.txt || {
     echo "Main requirements installation failed, trying with --ignore-installed flag..."
-    python3.10 -m pip install --no-cache-dir --ignore-installed -r /app/requirements.txt || {
+    python3.11 -m pip install --no-cache-dir --ignore-installed -r /app/requirements.txt || {
         echo "Warning: Some packages failed to install, but we'll continue anyway."
     }
 }

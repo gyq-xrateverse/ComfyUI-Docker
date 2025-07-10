@@ -105,6 +105,7 @@ RUN python${PYTHON_VERSION} -m pip install --no-cache-dir torch==2.6.0 torchvisi
 
 # Install problematic packages directly with fallback strategies
 RUN echo "Installing problematic packages directly..." && \
+    python${PYTHON_VERSION} -m pip install --no-cache-dir PyYAML || echo "Failed to install PyYAML" && \
     python${PYTHON_VERSION} -m pip install --no-cache-dir sortedcontainers==2.4.0 || echo "Failed to install sortedcontainers" && \
     python${PYTHON_VERSION} -m pip install --no-cache-dir pyhocon==0.3.59 || echo "Failed to install pyhocon" && \
     python${PYTHON_VERSION} -m pip install --no-cache-dir fal-client==0.6.0 || echo "Failed to install fal-client" && \
@@ -140,6 +141,7 @@ RUN cd /app && python${PYTHON_VERSION} /app/scripts/gather_requirements.py && \
 
 # Verify critical packages installation
 RUN echo "Verifying package installation..." && \
+    python${PYTHON_VERSION} -c "import yaml; print('✓ PyYAML installed')" || echo "✗ PyYAML missing" && \
     python${PYTHON_VERSION} -c "import sortedcontainers; print('✓ sortedcontainers installed')" || echo "✗ sortedcontainers missing" && \
     python${PYTHON_VERSION} -c "import pyhocon; print('✓ pyhocon installed')" || echo "✗ pyhocon missing" && \
     python${PYTHON_VERSION} -c "import imagesize; print('✓ imagesize installed')" || echo "✗ imagesize missing" && \
