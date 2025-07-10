@@ -2,6 +2,9 @@ ARG PYTHON_VERSION=3.10
 ARG CUDA_VERSION=12.9.0
 FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu22.04
 
+# Re-declare ARG after FROM to make it available in subsequent layers
+ARG PYTHON_VERSION=3.10
+
 # Set non-interactive installation
 ENV DEBIAN_FRONTEND=noninteractive
 
