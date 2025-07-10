@@ -1,4 +1,4 @@
-ARG PYTHON_VERSION=3.10
+ARG PYTHON_VERSION=3.11
 ARG CUDA_VERSION=12.9.0
 FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu22.04
 
@@ -13,9 +13,9 @@ RUN apt-get update && apt-get install -y \
     git \
     wget \
     curl \
-    python${PYTHON_VERSION} \
-    python${PYTHON_VERSION}-dev \
-    python${PYTHON_VERSION}-venv \
+    python3.11 \
+    python3.11-dev \
+    python3.11-venv \
     python3-pip \
     python3-setuptools \
     libgl1 \
@@ -36,8 +36,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Set Python version
-RUN ln -sf /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
-    ln -sf /usr/bin/python${PYTHON_VERSION} /usr/bin/python3
+RUN ln -sf /usr/bin/python3.11 /usr/bin/python && \
+    ln -sf /usr/bin/python3.11 /usr/bin/python3
 
 # Set working directory
 WORKDIR /app
@@ -96,56 +96,56 @@ COPY scripts/install_packages.sh /app/scripts/
 RUN mkdir -p /app/scripts && chmod +x /app/scripts/install_packages.sh
 
 # Run the requirement gathering script
-RUN cd /app && python${PYTHON_VERSION} /app/scripts/gather_requirements.py
+RUN cd /app && python3.11 /app/scripts/gather_requirements.py
 
 # Install Torch with CUDA support and xformers first
-RUN python${PYTHON_VERSION} -m pip install --no-cache-dir torch==2.6.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124 --extra-index-url https://pypi.org/simple && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir xformers==0.0.29.post3
+RUN python3.11 -m pip install --no-cache-dir torch==2.6.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124 --extra-index-url https://pypi.org/simple && \
+    python3.11 -m pip install --no-cache-dir xformers==0.0.29.post3
 
 # Install problematic packages directly with fallback strategies
 RUN echo "Installing problematic packages directly..." && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir sortedcontainers==2.4.0 || echo "Failed to install sortedcontainers" && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir pyhocon==0.3.59 || echo "Failed to install pyhocon" && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir fal-client==0.6.0 || echo "Failed to install fal-client" && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir imagesize==1.4.1 || echo "Failed to install imagesize" && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir evalidate==2.0.5 || echo "Failed to install evalidate" && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir litelama==0.1.7 || echo "Failed to install litelama" && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir pytorch-lightning==2.5.2 || echo "Failed to install pytorch-lightning" && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir nunchaku==0.15.4 || echo "Failed to install nunchaku" && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir voluptuous==0.15.2 || echo "Failed to install voluptuous" && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir gguf==0.17.1 || echo "Failed to install gguf" && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir argostranslate==1.9.6 || echo "Failed to install argostranslate" && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir bizyengine==1.2.33 || echo "Failed to install bizyengine"
+    python3.11 -m pip install --no-cache-dir sortedcontainers==2.4.0 || echo "Failed to install sortedcontainers" && \
+    python3.11 -m pip install --no-cache-dir pyhocon==0.3.59 || echo "Failed to install pyhocon" && \
+    python3.11 -m pip install --no-cache-dir fal-client==0.6.0 || echo "Failed to install fal-client" && \
+    python3.11 -m pip install --no-cache-dir imagesize==1.4.1 || echo "Failed to install imagesize" && \
+    python3.11 -m pip install --no-cache-dir evalidate==2.0.5 || echo "Failed to install evalidate" && \
+    python3.11 -m pip install --no-cache-dir litelama==0.1.7 || echo "Failed to install litelama" && \
+    python3.11 -m pip install --no-cache-dir pytorch-lightning==2.5.2 || echo "Failed to install pytorch-lightning" && \
+    python3.11 -m pip install --no-cache-dir nunchaku==0.15.4 || echo "Failed to install nunchaku" && \
+    python3.11 -m pip install --no-cache-dir voluptuous==0.15.2 || echo "Failed to install voluptuous" && \
+    python3.11 -m pip install --no-cache-dir gguf==0.17.1 || echo "Failed to install gguf" && \
+    python3.11 -m pip install --no-cache-dir argostranslate==1.9.6 || echo "Failed to install argostranslate" && \
+    python3.11 -m pip install --no-cache-dir bizyengine==1.2.33 || echo "Failed to install bizyengine"
 
 # Install more complex packages with special handling
 RUN echo "Installing dlib with special handling..." && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir dlib==19.24.2 --only-binary=:all: || \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir --no-build-isolation dlib==19.24.2 || \
+    python3.11 -m pip install --no-cache-dir dlib==19.24.2 --only-binary=:all: || \
+    python3.11 -m pip install --no-cache-dir --no-build-isolation dlib==19.24.2 || \
     echo "Failed to install dlib"
 
 RUN echo "Installing insightface with special handling..." && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir insightface==0.7.3 --only-binary=:all: || \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir --no-deps insightface==0.7.3 || \
+    python3.11 -m pip install --no-cache-dir insightface==0.7.3 --only-binary=:all: || \
+    python3.11 -m pip install --no-cache-dir --no-deps insightface==0.7.3 || \
     echo "Failed to install insightface"
 
 RUN echo "Installing fairscale with special handling..." && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir fairscale==0.4.13 --only-binary=:all: || \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir --no-build-isolation fairscale==0.4.13 || \
+    python3.11 -m pip install --no-cache-dir fairscale==0.4.13 --only-binary=:all: || \
+    python3.11 -m pip install --no-cache-dir --no-build-isolation fairscale==0.4.13 || \
     echo "Failed to install fairscale"
 
 # Run the requirement gathering script and install remaining dependencies
-RUN cd /app && python${PYTHON_VERSION} /app/scripts/gather_requirements.py && \
-    python${PYTHON_VERSION} -m pip install --no-cache-dir -r /app/requirements.txt || echo "Some packages failed to install"
+RUN cd /app && python3.11 /app/scripts/gather_requirements.py && \
+    python3.11 -m pip install --no-cache-dir -r /app/requirements.txt || echo "Some packages failed to install"
 
 # Verify critical packages installation
 RUN echo "Verifying package installation..." && \
-    python${PYTHON_VERSION} -c "import sortedcontainers; print('✓ sortedcontainers installed')" || echo "✗ sortedcontainers missing" && \
-    python${PYTHON_VERSION} -c "import pyhocon; print('✓ pyhocon installed')" || echo "✗ pyhocon missing" && \
-    python${PYTHON_VERSION} -c "import imagesize; print('✓ imagesize installed')" || echo "✗ imagesize missing" && \
-    python${PYTHON_VERSION} -c "import evalidate; print('✓ evalidate installed')" || echo "✗ evalidate missing" && \
-    python${PYTHON_VERSION} -c "import litelama; print('✓ litelama installed')" || echo "✗ litelama missing" && \
-    python${PYTHON_VERSION} -c "import pytorch_lightning; print('✓ pytorch_lightning installed')" || echo "✗ pytorch_lightning missing" && \
-    python${PYTHON_VERSION} -c "import nunchaku; print('✓ nunchaku installed')" || echo "✗ nunchaku missing" && \
+    python3.11 -c "import sortedcontainers; print('✓ sortedcontainers installed')" || echo "✗ sortedcontainers missing" && \
+    python3.11 -c "import pyhocon; print('✓ pyhocon installed')" || echo "✗ pyhocon missing" && \
+    python3.11 -c "import imagesize; print('✓ imagesize installed')" || echo "✗ imagesize missing" && \
+    python3.11 -c "import evalidate; print('✓ evalidate installed')" || echo "✗ evalidate missing" && \
+    python3.11 -c "import litelama; print('✓ litelama installed')" || echo "✗ litelama missing" && \
+    python3.11 -c "import pytorch_lightning; print('✓ pytorch_lightning installed')" || echo "✗ pytorch_lightning missing" && \
+    python3.11 -c "import nunchaku; print('✓ nunchaku installed')" || echo "✗ nunchaku missing" && \
     echo "Package verification completed"
 
 # Set environment variables
@@ -166,4 +166,4 @@ ENTRYPOINT ["/app/entrypoint.sh"]
 EXPOSE 8188
 
 # Command
-CMD ["python3.10", "main.py", "--listen", "0.0.0.0", "--port", "8188", "--enable-cors-header"] 
+CMD ["python3.11", "main.py", "--listen", "0.0.0.0", "--port", "8188", "--enable-cors-header"] 

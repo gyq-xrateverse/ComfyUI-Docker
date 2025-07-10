@@ -45,7 +45,8 @@ REPO_REQUIREMENTS = [
     "https://github.com/Phando/ComfyUI-nunchaku/raw/main/requirements.txt",
     "https://github.com/AlexanderDzhoganov/comfyui-dream-video-batches/raw/main/requirements.txt",
     "https://github.com/kijai/ComfyUI-3D-Pack/raw/main/requirements.txt",
-    "https://github.com/kealiu/comfyui-supir/raw/main/requirements.txt",
+    "https://github.com/kijai/ComfyUI-SUPIR/raw/main/requirements.txt",
+    "https://github.com/kijai/ComfyUI-GIMM-VFI/raw/main/requirements.txt",
 ]
 
 # Additional packages that might be needed
