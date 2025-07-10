@@ -4,59 +4,13 @@ set -e
 # 确保scripts目录存在
 mkdir -p /app/scripts
 
-# 如果外部数据目录存在且不为空，则检查并设置
-echo "检查外部数据目录..."
-
-# 检查目录是否存在且不为空的函数
-is_dir_not_empty() {
-    [ -d "$1" ] && [ "$(ls -A "$1" 2>/dev/null)" ]
-}
-
-# 为目录设置软连接的函数
-setup_symlink() {
-    local source_dir="$1"
-    local target_dir="$2"
-    local backup_dir="${target_dir}-bak"
-    
-    echo "设置软连接: $source_dir -> $target_dir"
-    
-    # 检查目标是否已经是指向源的软连接
-    if [ -L "$target_dir" ] && [ "$(readlink "$target_dir")" = "$source_dir" ]; then
-        echo "软连接已存在且正确: $target_dir -> $source_dir"
-        return 0
-    fi
-    
-    # 如果现有目录存在且不是软连接，则备份
-    if [ -e "$target_dir" ] && [ ! -L "$target_dir" ]; then
-        echo "备份现有目录: $target_dir -> $backup_dir"
-        mv "$target_dir" "$backup_dir"
-    elif [ -L "$target_dir" ]; then
-        echo "移除现有软连接: $target_dir"
-        rm "$target_dir"
-    fi
-    
-    # 创建软连接
-    ln -s "$source_dir" "$target_dir"
-    echo "软连接已创建: $target_dir -> $source_dir"
-}
-
-# 检查并设置models目录
-if is_dir_not_empty "/root/data/models"; then
-    echo "发现外部models目录且不为空: /root/data/models"
-    setup_symlink "/root/data/models" "/app/models"
+# 设置外部数据目录
+if [ -f "/app/scripts/setup_external_data.sh" ]; then
+    chmod +x /app/scripts/setup_external_data.sh
+    /app/scripts/setup_external_data.sh
 else
-    echo "外部models目录未找到或为空，使用默认目录: /app/models"
+    echo "警告: 外部数据目录设置脚本不存在，跳过外部数据目录设置"
 fi
-
-# 检查并设置custom_nodes目录  
-if is_dir_not_empty "/root/data/custom_nodes"; then
-    echo "发现外部custom_nodes目录且不为空: /root/data/custom_nodes"
-    setup_symlink "/root/data/custom_nodes" "/app/custom_nodes"
-else
-    echo "外部custom_nodes目录未找到或为空，使用默认目录: /app/custom_nodes"
-fi
-
-echo "外部数据目录设置完成。"
 
 # 如果请求，更新ComfyUI和自定义节点
 if [ "${UPDATE_REPOSITORIES:-false}" = "true" ]; then
