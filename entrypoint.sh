@@ -61,21 +61,21 @@ echo "检查缺失的关键包..."
 missing_packages=""
 
 # 检查每个关键包
-python3.10 -c "import yaml" 2>/dev/null || missing_packages="$missing_packages PyYAML"
-python3.10 -c "import sortedcontainers" 2>/dev/null || missing_packages="$missing_packages sortedcontainers==2.4.0"
-python3.10 -c "import pyhocon" 2>/dev/null || missing_packages="$missing_packages pyhocon==0.3.59"
-python3.10 -c "import imagesize" 2>/dev/null || missing_packages="$missing_packages imagesize==1.4.1"
-python3.10 -c "import evalidate" 2>/dev/null || missing_packages="$missing_packages evalidate==2.0.5"
-python3.10 -c "import litelama" 2>/dev/null || missing_packages="$missing_packages litelama==0.1.7"
-python3.10 -c "import pytorch_lightning" 2>/dev/null || missing_packages="$missing_packages pytorch-lightning==2.5.2"
-python3.10 -c "import nunchaku" 2>/dev/null || missing_packages="$missing_packages nunchaku==0.15.4"
+python3.11 -c "import yaml" 2>/dev/null || missing_packages="$missing_packages PyYAML"
+python3.11 -c "import sortedcontainers" 2>/dev/null || missing_packages="$missing_packages sortedcontainers==2.4.0"
+python3.11 -c "import pyhocon" 2>/dev/null || missing_packages="$missing_packages pyhocon==0.3.59"
+python3.11 -c "import imagesize" 2>/dev/null || missing_packages="$missing_packages imagesize==1.4.1"
+python3.11 -c "import evalidate" 2>/dev/null || missing_packages="$missing_packages evalidate==2.0.5"
+python3.11 -c "import litelama" 2>/dev/null || missing_packages="$missing_packages litelama==0.1.7"
+python3.11 -c "import pytorch_lightning" 2>/dev/null || missing_packages="$missing_packages pytorch-lightning==2.5.2"
+python3.11 -c "import nunchaku" 2>/dev/null || missing_packages="$missing_packages nunchaku==0.15.4"
 
 # 如果有缺失的包，则安装
 if [ -n "$missing_packages" ]; then
     echo "安装缺失的包: $missing_packages"
     for package in $missing_packages; do
         echo "安装 $package..."
-        python3.10 -m pip install --no-cache-dir "$package" || echo "安装 $package 失败"
+        python3.11 -m pip install --no-cache-dir "$package" || echo "安装 $package 失败"
     done
 else
     echo "所有关键包已安装。"
@@ -84,8 +84,8 @@ fi
 # 如果requirements文件不存在，则生成
 if [ ! -f "/app/requirements.txt" ] || [ "${REGENERATE_REQUIREMENTS:-false}" = "true" ]; then
     echo "生成requirements.txt..."
-    python3.10 /app/scripts/gather_requirements.py
-    python3.10 -m pip install -r /app/requirements.txt
+    python3.11 /app/scripts/gather_requirements.py
+    python3.11 -m pip install -r /app/requirements.txt
 fi
 
 # 如果存在用户提供的初始化脚本，则运行
