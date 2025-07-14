@@ -93,7 +93,8 @@ RUN mkdir -p /app/custom_nodes && \
 COPY scripts/gather_requirements.py /app/scripts/
 COPY scripts/problematic_requirements.txt /app/scripts/
 COPY scripts/install_packages.sh /app/scripts/
-RUN mkdir -p /app/scripts && chmod +x /app/scripts/install_packages.sh
+COPY scripts/setup_external_data.sh /app/scripts/
+RUN mkdir -p /app/scripts && chmod +x /app/scripts/install_packages.sh && chmod +x /app/scripts/setup_external_data.sh
 
 # Run the requirement gathering script
 RUN cd /app && python3.11 /app/scripts/gather_requirements.py
