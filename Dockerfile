@@ -35,7 +35,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Set Python version
+# Set Python version and setup ComfyUI
 RUN ln -sf /usr/bin/python3.11 /usr/bin/python && \
     ln -sf /usr/bin/python3.11 /usr/bin/python3
 
@@ -158,19 +158,13 @@ RUN echo "Verifying package installation..." && \
 ENV PYTHONPATH=/app
 ENV PATH="/app:${PATH}"
 
-# Copy the entrypoint script
+# Copy the entrypoint script and setup user/permissions
 COPY entrypoint.sh /app/
-RUN chmod +x /app/entrypoint.sh
-
-# Create user and group with UID/GID 1001
-RUN groupadd -g 1001 comfyui && \
-    useradd -u 1001 -g 1001 -m -s /bin/bash comfyui
-
-# Create directories for models and outputs
-RUN mkdir -p /app/models /app/output /app/user /app/temp
-
-# Set ownership of /app directory to comfyui user
-RUN chown -R 1001:1001 /app
+RUN chmod +x /app/entrypoint.sh && \
+    groupadd -g 1001 comfyui && \
+    useradd -u 1001 -g 1001 -m -s /bin/bash comfyui && \
+    mkdir -p /app/models /app/output /app/user /app/temp && \
+    chown -R 1001:1001 /app/models /app/custom_nodes
 
 # Install additional packages that might fail during main installation
 RUN python3.11 -m pip install --no-cache-dir insightface==0.7.3 || echo "insightface installation failed, will retry later" && \
