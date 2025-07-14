@@ -94,7 +94,8 @@ COPY scripts/gather_requirements.py /app/scripts/
 COPY scripts/problematic_requirements.txt /app/scripts/
 COPY scripts/install_packages.sh /app/scripts/
 COPY scripts/setup_external_data.sh /app/scripts/
-RUN mkdir -p /app/scripts && chmod +x /app/scripts/install_packages.sh && chmod +x /app/scripts/setup_external_data.sh
+COPY scripts/set_permissions.sh /app/scripts/
+RUN mkdir -p /app/scripts && chmod +x /app/scripts/install_packages.sh && chmod +x /app/scripts/setup_external_data.sh && chmod +x /app/scripts/set_permissions.sh
 
 # Run the requirement gathering script
 RUN cd /app && python3.11 /app/scripts/gather_requirements.py
@@ -157,8 +158,18 @@ ENV PATH="/app:${PATH}"
 COPY entrypoint.sh /app/
 RUN chmod +x /app/entrypoint.sh
 
+# Create user and group with UID/GID 1001
+RUN groupadd -g 1001 comfyui && \
+    useradd -u 1001 -g 1001 -m -s /bin/bash comfyui
+
 # Create directories for models and outputs
 RUN mkdir -p /app/models /app/output
+
+# Set ownership of /app directory to comfyui user
+RUN chown -R 1001:1001 /app
+
+# Switch to comfyui user
+USER comfyui
 
 # Set the entrypoint
 ENTRYPOINT ["/app/entrypoint.sh"]

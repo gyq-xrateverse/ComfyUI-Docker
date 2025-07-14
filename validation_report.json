@@ -1,0 +1,1146 @@
+{
+  "timestamp": "2025-07-14 10:58:50",
+  "summary": {
+    "total_packages": 137,
+    "installed_packages": 39,
+    "import_success_packages": 33,
+    "installation_rate": "28.5%",
+    "import_success_rate": "24.1%"
+  },
+  "critical_packages": {
+    "total": 3,
+    "passed": 2
+  },
+  "optional_packages": {
+    "total": 1,
+    "passed": 0
+  },
+  "compatibility_issues": [],
+  "detailed_results": {
+    "torch": {
+      "package": "torch",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5682439804077148
+    },
+    "numpy": {
+      "package": "numpy",
+      "installed": true,
+      "version": "1.26.4",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.1319224834442139,
+      "module_version": "1.26.4"
+    },
+    "pillow": {
+      "package": "pillow",
+      "installed": true,
+      "version": "11.2.1",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.1098127365112305,
+      "module_version": "11.2.1"
+    },
+    "opencv-python": {
+      "package": "opencv-python",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.563800573348999
+    },
+    "torchvision": {
+      "package": "torchvision",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5655579566955566
+    },
+    "torchaudio": {
+      "package": "torchaudio",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5616095066070557
+    },
+    "xformers": {
+      "package": "xformers",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5557725429534912
+    },
+    "transformers": {
+      "package": "transformers",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5626904964447021
+    },
+    "safetensors": {
+      "package": "safetensors",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5646228790283203
+    },
+    "diffusers": {
+      "package": "diffusers",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5743112564086914
+    },
+    "accelerate": {
+      "package": "accelerate",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5751180648803711
+    },
+    "comfyui-frontend-package": {
+      "package": "comfyui-frontend-package",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5761682987213135
+    },
+    "comfyui-workflow-templates": {
+      "package": "comfyui-workflow-templates",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5785233974456787
+    },
+    "comfyui-embedded-docs": {
+      "package": "comfyui-embedded-docs",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5761315822601318
+    },
+    "torchsde": {
+      "package": "torchsde",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5734140872955322
+    },
+    "einops": {
+      "package": "einops",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.571523904800415
+    },
+    "tokenizers": {
+      "package": "tokenizers",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.581967830657959
+    },
+    "sentencepiece": {
+      "package": "sentencepiece",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.6063797473907471
+    },
+    "aiohttp": {
+      "package": "aiohttp",
+      "installed": true,
+      "version": "3.11.18",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.8149242401123047,
+      "module_version": "3.11.18"
+    },
+    "yarl": {
+      "package": "yarl",
+      "installed": true,
+      "version": "1.20.0",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.0735878944396973,
+      "module_version": "1.20.0"
+    },
+    "pyyaml": {
+      "package": "pyyaml",
+      "installed": true,
+      "version": "6.0.1",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.0844674110412598,
+      "module_version": "6.0.1"
+    },
+    "scipy": {
+      "package": "scipy",
+      "installed": true,
+      "version": "1.13.1",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.1218619346618652,
+      "module_version": "1.13.1"
+    },
+    "tqdm": {
+      "package": "tqdm",
+      "installed": true,
+      "version": "4.66.5",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.1146481037139893,
+      "module_version": "4.66.5"
+    },
+    "psutil": {
+      "package": "psutil",
+      "installed": true,
+      "version": "5.9.0",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.0902047157287598,
+      "module_version": "5.9.0"
+    },
+    "alembic": {
+      "package": "alembic",
+      "installed": true,
+      "version": "1.13.3",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.3600561618804932,
+      "module_version": "1.13.3"
+    },
+    "sqlalchemy": {
+      "package": "sqlalchemy",
+      "installed": true,
+      "version": "1.4.49",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.1134235858917236,
+      "module_version": "1.4.49"
+    },
+    "kornia": {
+      "package": "kornia",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5804643630981445
+    },
+    "spandrel": {
+      "package": "spandrel",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5705087184906006
+    },
+    "soundfile": {
+      "package": "soundfile",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.570875883102417
+    },
+    "av": {
+      "package": "av",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5734288692474365
+    },
+    "pydantic": {
+      "package": "pydantic",
+      "installed": true,
+      "version": "2.11.4",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.136357307434082,
+      "module_version": "2.11.4"
+    },
+    "pydantic-settings": {
+      "package": "pydantic-settings",
+      "installed": true,
+      "version": "2.6.1",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.2238342761993408,
+      "module_version": "2.6.1"
+    },
+    "deepdiff": {
+      "package": "deepdiff",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5671882629394531
+    },
+    "pynvml": {
+      "package": "pynvml",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.6045682430267334
+    },
+    "py-cpuinfo": {
+      "package": "py-cpuinfo",
+      "installed": true,
+      "version": "9.0.0",
+      "import_success": false,
+      "import_error": "No module named 'py_cpuinfo'",
+      "validation_time": 1.0791041851043701
+    },
+    "piexif": {
+      "package": "piexif",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5686826705932617
+    },
+    "jetson-stats": {
+      "package": "jetson-stats",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5623898506164551
+    },
+    "numba": {
+      "package": "numba",
+      "installed": true,
+      "version": "0.60.0",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.2686846256256104,
+      "module_version": "0.60.0"
+    },
+    "colour-science": {
+      "package": "colour-science",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5658910274505615
+    },
+    "rembg": {
+      "package": "rembg",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.572826623916626
+    },
+    "pixeloe": {
+      "package": "pixeloe",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.6380867958068848
+    },
+    "transparent-background": {
+      "package": "transparent-background",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5469775199890137
+    },
+    "onnxruntime": {
+      "package": "onnxruntime",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5589816570281982
+    },
+    "color_matcher": {
+      "package": "color_matcher",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5627760887145996
+    },
+    "onnxruntime-gpu": {
+      "package": "onnxruntime-gpu",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5546426773071289
+    },
+    "facexlib": {
+      "package": "facexlib",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5596804618835449
+    },
+    "ftfy": {
+      "package": "ftfy",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.601895809173584
+    },
+    "timm": {
+      "package": "timm",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.9916501045227051
+    },
+    "importlib_metadata": {
+      "package": "importlib_metadata",
+      "installed": true,
+      "version": "7.0.1",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.2470972537994385
+    },
+    "huggingface_hub": {
+      "package": "huggingface_hub",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.6639270782470703
+    },
+    "filelock": {
+      "package": "filelock",
+      "installed": true,
+      "version": "3.13.1",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.2206945419311523,
+      "module_version": "3.13.1"
+    },
+    "scikit-image": {
+      "package": "scikit-image",
+      "installed": true,
+      "version": "0.24.0",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.141049861907959,
+      "module_version": "0.24.0"
+    },
+    "python-dateutil": {
+      "package": "python-dateutil",
+      "installed": true,
+      "version": "2.9.0.post0",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.1092162132263184,
+      "module_version": "2.9.0.post0"
+    },
+    "mediapipe": {
+      "package": "mediapipe",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5497696399688721
+    },
+    "svglib": {
+      "package": "svglib",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5511059761047363
+    },
+    "fvcore": {
+      "package": "fvcore",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5544452667236328
+    },
+    "yapf": {
+      "package": "yapf",
+      "installed": true,
+      "version": "0.40.2",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.1314756870269775,
+      "module_version": "0.40.2"
+    },
+    "omegaconf": {
+      "package": "omegaconf",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5696046352386475
+    },
+    "addict": {
+      "package": "addict",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5829000473022461
+    },
+    "yacs": {
+      "package": "yacs",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.6821415424346924
+    },
+    "trimesh": {
+      "package": "trimesh",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5999143123626709
+    },
+    "albumentations": {
+      "package": "albumentations",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5838143825531006
+    },
+    "scikit-learn": {
+      "package": "scikit-learn",
+      "installed": true,
+      "version": "1.5.1",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.5302438735961914,
+      "module_version": "1.5.1"
+    },
+    "matplotlib": {
+      "package": "matplotlib",
+      "installed": true,
+      "version": "3.9.2",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.182215690612793,
+      "module_version": "3.9.2"
+    },
+    "opencv-contrib-python": {
+      "package": "opencv-contrib-python",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5576682090759277
+    },
+    "pandas": {
+      "package": "pandas",
+      "installed": true,
+      "version": "2.2.2",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.5771458148956299,
+      "module_version": "2.2.2"
+    },
+    "numexpr": {
+      "package": "numexpr",
+      "installed": true,
+      "version": "2.8.7",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.1422767639160156,
+      "module_version": "2.8.7"
+    },
+    "onnx": {
+      "package": "onnx",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5675506591796875
+    },
+    "segment_anything": {
+      "package": "segment_anything",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.7150886058807373
+    },
+    "ultralytics": {
+      "package": "ultralytics",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5685791969299316
+    },
+    "clip-interrogator": {
+      "package": "clip-interrogator",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5974822044372559
+    },
+    "simpleeval": {
+      "package": "simpleeval",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5707125663757324
+    },
+    "color-matcher": {
+      "package": "color-matcher",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5737266540527344
+    },
+    "mss": {
+      "package": "mss",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5877249240875244
+    },
+    "imageio-ffmpeg": {
+      "package": "imageio-ffmpeg",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.589519739151001
+    },
+    "segment-anything": {
+      "package": "segment-anything",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.6789090633392334
+    },
+    "opencv-python-headless": {
+      "package": "opencv-python-headless",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.588299036026001
+    },
+    "dill": {
+      "package": "dill",
+      "installed": true,
+      "version": "0.3.8",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.0757074356079102,
+      "module_version": "0.3.8"
+    },
+    "cachetools": {
+      "package": "cachetools",
+      "installed": true,
+      "version": "5.3.3",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.0991623401641846,
+      "module_version": "5.3.3"
+    },
+    "webcolors": {
+      "package": "webcolors",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5669193267822266
+    },
+    "gitpython": {
+      "package": "gitpython",
+      "installed": true,
+      "version": "3.1.43",
+      "import_success": false,
+      "import_error": "No module named 'gitpython'",
+      "validation_time": 1.1439011096954346
+    },
+    "pygithub": {
+      "package": "pygithub",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5534734725952148
+    },
+    "matrix-client": {
+      "package": "matrix-client",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5675911903381348
+    },
+    "huggingface-hub": {
+      "package": "huggingface-hub",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5933434963226318
+    },
+    "typer": {
+      "package": "typer",
+      "installed": true,
+      "version": "0.9.0",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.1822071075439453,
+      "module_version": "0.9.0"
+    },
+    "rich": {
+      "package": "rich",
+      "installed": true,
+      "version": "13.7.1",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.0786631107330322
+    },
+    "typing-extensions": {
+      "package": "typing-extensions",
+      "installed": true,
+      "version": "4.13.2",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.0651910305023193
+    },
+    "toml": {
+      "package": "toml",
+      "installed": true,
+      "version": "0.10.2",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.0740382671356201,
+      "module_version": "0.10.2"
+    },
+    "uv": {
+      "package": "uv",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5504591464996338
+    },
+    "chardet": {
+      "package": "chardet",
+      "installed": true,
+      "version": "4.0.0",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.0770704746246338,
+      "module_version": "4.0.0"
+    },
+    "qrcode": {
+      "package": "qrcode",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5490574836730957
+    },
+    "requirements-parser": {
+      "package": "requirements-parser",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5642807483673096
+    },
+    "imageio_ffmpeg": {
+      "package": "imageio_ffmpeg",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5447738170623779
+    },
+    "rich_argparse": {
+      "package": "rich_argparse",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5476198196411133
+    },
+    "cmake": {
+      "package": "cmake",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5475590229034424
+    },
+    "imageio": {
+      "package": "imageio",
+      "installed": true,
+      "version": "2.33.1",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.0964279174804688,
+      "module_version": "2.33.1"
+    },
+    "joblib": {
+      "package": "joblib",
+      "installed": true,
+      "version": "1.4.2",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.064727544784546,
+      "module_version": "1.4.2"
+    },
+    "pilgram": {
+      "package": "pilgram",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5463004112243652
+    },
+    "peft": {
+      "package": "peft",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5802381038665771
+    },
+    "protobuf": {
+      "package": "protobuf",
+      "installed": true,
+      "version": "4.25.3",
+      "import_success": false,
+      "import_error": "No module named 'protobuf'",
+      "validation_time": 1.2258713245391846
+    },
+    "pyloudnorm": {
+      "package": "pyloudnorm",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5555338859558105
+    },
+    "scikit_image": {
+      "package": "scikit_image",
+      "installed": true,
+      "version": "0.24.0",
+      "import_success": false,
+      "import_error": "No module named 'scikit_image'",
+      "validation_time": 1.0615265369415283
+    },
+    "scikit_learn": {
+      "package": "scikit_learn",
+      "installed": true,
+      "version": "1.5.1",
+      "import_success": false,
+      "import_error": "No module named 'scikit_learn'",
+      "validation_time": 1.081732988357544
+    },
+    "pymatting": {
+      "package": "pymatting",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5505809783935547
+    },
+    "blend_modes": {
+      "package": "blend_modes",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5646450519561768
+    },
+    "loguru": {
+      "package": "loguru",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5431368350982666
+    },
+    "wget": {
+      "package": "wget",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5575740337371826
+    },
+    "iopath": {
+      "package": "iopath",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5380785465240479
+    },
+    "typer_config": {
+      "package": "typer_config",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5454163551330566
+    },
+    "fastapi": {
+      "package": "fastapi",
+      "installed": true,
+      "version": "0.115.12",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.2510545253753662,
+      "module_version": "0.115.12"
+    },
+    "google-generativeai": {
+      "package": "google-generativeai",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.54789137840271
+    },
+    "google-genai": {
+      "package": "google-genai",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5899090766906738
+    },
+    "bitsandbytes": {
+      "package": "bitsandbytes",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5573461055755615
+    },
+    "hydra-core": {
+      "package": "hydra-core",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5483520030975342
+    },
+    "blind-watermark": {
+      "package": "blind-watermark",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5484781265258789
+    },
+    "pyzbar": {
+      "package": "pyzbar",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5446689128875732
+    },
+    "psd-tools": {
+      "package": "psd-tools",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5505077838897705
+    },
+    "zhipuai": {
+      "package": "zhipuai",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5532231330871582
+    },
+    "openai": {
+      "package": "openai",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5986192226409912
+    },
+    "pyopenssl": {
+      "package": "pyopenssl",
+      "installed": true,
+      "version": "24.2.1",
+      "import_success": false,
+      "import_error": "No module named 'pyopenssl'",
+      "validation_time": 1.1011943817138672
+    },
+    "watchdog": {
+      "package": "watchdog",
+      "installed": true,
+      "version": "4.0.1",
+      "import_success": true,
+      "import_error": null,
+      "validation_time": 1.1390321254730225
+    },
+    "lark-parser": {
+      "package": "lark-parser",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.6368470191955566
+    },
+    "json-repair": {
+      "package": "json-repair",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5687086582183838
+    },
+    "scenedetect": {
+      "package": "scenedetect",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.6112909317016602
+    },
+    "loralib": {
+      "package": "loralib",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5791544914245605
+    },
+    "natsort": {
+      "package": "natsort",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5562822818756104
+    },
+    "faster_whisper": {
+      "package": "faster_whisper",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5678818225860596
+    },
+    "clip_interrogator": {
+      "package": "clip_interrogator",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5577285289764404
+    },
+    "lark": {
+      "package": "lark",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5619907379150391
+    },
+    "bizyui": {
+      "package": "bizyui",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5860495567321777
+    },
+    "simple_lama_inpainting": {
+      "package": "simple_lama_inpainting",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.6127445697784424
+    },
+    "simplejson": {
+      "package": "simplejson",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5646905899047852
+    },
+    "pycocotools": {
+      "package": "pycocotools",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5599362850189209
+    },
+    "open-clip-torch": {
+      "package": "open-clip-torch",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5798892974853516
+    },
+    "cupy-cuda12x": {
+      "package": "cupy-cuda12x",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5593535900115967
+    },
+    "easydict": {
+      "package": "easydict",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5894415378570557
+    },
+    "sageattention": {
+      "package": "sageattention",
+      "installed": false,
+      "version": null,
+      "import_success": false,
+      "import_error": null,
+      "validation_time": 0.5506832599639893
+    }
+  }
+}

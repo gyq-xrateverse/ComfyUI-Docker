@@ -12,6 +12,13 @@ else
     echo "警告: 外部数据目录设置脚本不存在，跳过外部数据目录设置"
 fi
 
+# 设置关键目录权限
+if [ -f "/app/scripts/set_permissions.sh" ]; then
+    /app/scripts/set_permissions.sh
+else
+    echo "警告: 权限设置脚本不存在，跳过权限设置"
+fi
+
 # 如果请求，更新ComfyUI和自定义节点
 if [ "${UPDATE_REPOSITORIES:-false}" = "true" ]; then
     echo "更新ComfyUI..."
