@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     git \
     wget \
     curl \
+    sudo \
     python3.11 \
     python3.11-dev \
     python3.11-venv \
@@ -162,7 +163,7 @@ ENV PATH="/app:${PATH}"
 COPY entrypoint.sh /app/
 RUN chmod +x /app/entrypoint.sh && \
     groupadd -g 1001 comfyui && \
-    useradd -u 1001 -g 1001 -m -s /bin/bash comfyui && \
+    useradd -u 1001 -g 1001 -G sudo -m -s /bin/bash comfyui && \
     mkdir -p /app/models /app/output /app/user /app/temp && \
     chown -R 1001:1001 /app/models /app/custom_nodes
 
