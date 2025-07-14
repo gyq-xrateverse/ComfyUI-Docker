@@ -89,7 +89,11 @@ RUN mkdir -p /app/custom_nodes && \
     git clone --depth=1 https://github.com/AlexanderDzhoganov/comfyui-dream-video-batches.git && \
     git clone --depth=1 https://github.com/Phando/ComfyUI-nunchaku.git && \
     git clone --depth=1 https://github.com/Dontdrunk/ComfyUI-DD-Translation.git && \
-    find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
+    git clone --depth=1 https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet.git comfyui_custom_nodes_alekpet && \
+    find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true && \
+    find /app/custom_nodes -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true && \
+    find /app/custom_nodes -type f -name "go" -exec chmod +x {} \; 2>/dev/null || true && \
+    find /app/custom_nodes -path "*/bin/*" -type f -exec chmod +x {} \; 2>/dev/null || true
 
 # Copy scripts
 COPY scripts/gather_requirements.py /app/scripts/
@@ -164,8 +168,9 @@ COPY entrypoint.sh /app/
 RUN chmod +x /app/entrypoint.sh && \
     groupadd -g 1001 comfyui && \
     useradd -u 1001 -g 1001 -G sudo -m -s /bin/bash comfyui && \
+    echo "comfyui ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
     mkdir -p /app/models /app/output /app/user /app/temp && \
-    chown -R 1001:1001 /app/models /app/custom_nodes
+    chown -R 1001:1001 /app
 
 # Install additional packages that might fail during main installation
 RUN python3.11 -m pip install --no-cache-dir insightface==0.7.3 || echo "insightface installation failed, will retry later" && \
