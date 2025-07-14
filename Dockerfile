@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y \
     git \
     wget \
     curl \
-    sudo \
     python3.11 \
     python3.11-dev \
     python3.11-venv \
@@ -163,22 +162,17 @@ RUN echo "Verifying package installation..." && \
 ENV PYTHONPATH=/app
 ENV PATH="/app:${PATH}"
 
-# Copy the entrypoint script and setup user/permissions
+# Copy the entrypoint script and setup directories
 COPY entrypoint.sh /app/
 RUN chmod +x /app/entrypoint.sh && \
-    groupadd -g 1001 comfyui && \
-    useradd -u 1001 -g 1001 -G sudo -m -s /bin/bash comfyui && \
-    echo "comfyui ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
-    mkdir -p /app/models /app/output /app/user /app/temp && \
-    chown -R 1001:1001 /app
+    mkdir -p /app/models /app/output /app/user /app/temp
 
 # Install additional packages that might fail during main installation
 RUN python3.11 -m pip install --no-cache-dir insightface==0.7.3 || echo "insightface installation failed, will retry later" && \
     python3.11 -m pip install --no-cache-dir toolz || echo "toolz installation failed, will retry later" && \
     python3.11 -m pip install --no-cache-dir plyfile || echo "plyfile installation failed, will retry later"
 
-# Switch to comfyui user
-USER comfyui
+# Run as root user
 
 # Set the entrypoint
 ENTRYPOINT ["/app/entrypoint.sh"]
