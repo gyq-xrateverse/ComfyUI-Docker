@@ -148,6 +148,9 @@ RUN echo "Verifying package installation..." && \
     python3.11 -c "import litelama; print('✓ litelama installed')" || echo "✗ litelama missing" && \
     python3.11 -c "import pytorch_lightning; print('✓ pytorch_lightning installed')" || echo "✗ pytorch_lightning missing" && \
     python3.11 -c "import nunchaku; print('✓ nunchaku installed')" || echo "✗ nunchaku missing" && \
+    python3.11 -c "import insightface; print('✓ insightface installed')" || echo "✗ insightface missing" && \
+    python3.11 -c "import toolz; print('✓ toolz installed')" || echo "✗ toolz missing" && \
+    python3.11 -c "import plyfile; print('✓ plyfile installed')" || echo "✗ plyfile missing" && \
     echo "Package verification completed"
 
 # Set environment variables
@@ -163,10 +166,15 @@ RUN groupadd -g 1001 comfyui && \
     useradd -u 1001 -g 1001 -m -s /bin/bash comfyui
 
 # Create directories for models and outputs
-RUN mkdir -p /app/models /app/output
+RUN mkdir -p /app/models /app/output /app/user /app/temp
 
 # Set ownership of /app directory to comfyui user
 RUN chown -R 1001:1001 /app
+
+# Install additional packages that might fail during main installation
+RUN python3.11 -m pip install --no-cache-dir insightface==0.7.3 || echo "insightface installation failed, will retry later" && \
+    python3.11 -m pip install --no-cache-dir toolz || echo "toolz installation failed, will retry later" && \
+    python3.11 -m pip install --no-cache-dir plyfile || echo "plyfile installation failed, will retry later"
 
 # Switch to comfyui user
 USER comfyui

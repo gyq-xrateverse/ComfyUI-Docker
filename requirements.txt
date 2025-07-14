@@ -146,3 +146,9 @@ open-clip-torch
 cupy-cuda12x
 easydict
 sageattention==1.0.6
+
+# 新增缺失依赖包
+insightface==0.7.3
+toolz
+plyfile
+nunchaku==0.3.1

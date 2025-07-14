@@ -6,7 +6,6 @@ mkdir -p /app/scripts
 
 # 设置外部数据目录
 if [ -f "/app/scripts/setup_external_data.sh" ]; then
-    chmod +x /app/scripts/setup_external_data.sh
     /app/scripts/setup_external_data.sh
 else
     echo "警告: 外部数据目录设置脚本不存在，跳过外部数据目录设置"
@@ -63,26 +62,41 @@ if [ "${DOWNLOAD_EXAMPLE_MODELS:-false}" = "true" ]; then
     download_model "https://huggingface.co/lllyasviel/ControlNet-v1-1/resolve/main/control_v11p_sd15_openpose.pth" "/app/models/controlnet"
 fi
 
-# 在运行时检查并安装缺失的关键包
+# 检查缺失的关键包
 echo "检查缺失的关键包..."
-missing_packages=""
+missing_packages=()
 
-# 检查每个关键包
-python3.11 -c "import yaml" 2>/dev/null || missing_packages="$missing_packages PyYAML"
-python3.11 -c "import sortedcontainers" 2>/dev/null || missing_packages="$missing_packages sortedcontainers==2.4.0"
-python3.11 -c "import pyhocon" 2>/dev/null || missing_packages="$missing_packages pyhocon==0.3.59"
-python3.11 -c "import imagesize" 2>/dev/null || missing_packages="$missing_packages imagesize==1.4.1"
-python3.11 -c "import evalidate" 2>/dev/null || missing_packages="$missing_packages evalidate==2.0.5"
-python3.11 -c "import litelama" 2>/dev/null || missing_packages="$missing_packages litelama==0.1.7"
-python3.11 -c "import pytorch_lightning" 2>/dev/null || missing_packages="$missing_packages pytorch-lightning==2.5.2"
-python3.11 -c "import nunchaku" 2>/dev/null || missing_packages="$missing_packages nunchaku==0.15.4"
+# 检查关键包
+packages=("insightface" "toolz" "plyfile")
+for package in "${packages[@]}"; do
+    if ! python3.11 -c "import $package" 2>/dev/null; then
+        missing_packages+=("$package")
+    fi
+done
 
-# 如果有缺失的包，则安装
-if [ -n "$missing_packages" ]; then
-    echo "安装缺失的包: $missing_packages"
-    for package in $missing_packages; do
-        echo "安装 $package..."
-        python3.11 -m pip install --no-cache-dir "$package" || echo "安装 $package 失败"
+# 安装缺失的包
+if [ ${#missing_packages[@]} -gt 0 ]; then
+    echo "发现缺失的包: ${missing_packages[*]}"
+    echo "配置pip使用清华源..."
+    python3.11 -m pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+    python3.11 -m pip config set global.trusted-host pypi.tuna.tsinghua.edu.cn
+    
+    for package in "${missing_packages[@]}"; do
+        echo "正在安装 $package..."
+        case $package in
+            "insightface")
+                python3.11 -m pip install --no-cache-dir insightface==0.7.3 -i https://pypi.tuna.tsinghua.edu.cn/simple || echo "安装 $package 失败，将继续运行"
+                ;;
+            "toolz")
+                python3.11 -m pip install --no-cache-dir toolz -i https://pypi.tuna.tsinghua.edu.cn/simple || echo "安装 $package 失败，将继续运行"
+                ;;
+            "plyfile")
+                python3.11 -m pip install --no-cache-dir plyfile -i https://pypi.tuna.tsinghua.edu.cn/simple || echo "安装 $package 失败，将继续运行"
+                ;;
+            *)
+                python3.11 -m pip install --no-cache-dir "$package" -i https://pypi.tuna.tsinghua.edu.cn/simple || echo "安装 $package 失败，将继续运行"
+                ;;
+        esac
     done
 else
     echo "所有关键包已安装。"
@@ -102,11 +116,9 @@ if [ -f "/app/custom_init.sh" ]; then
     /app/custom_init.sh
 fi
 
-# 设置所有文件的所有权为运行用户
-if [ "${FIX_PERMISSIONS:-true}" = "true" ]; then
-    echo "设置正确的权限..."
-    find /app -not -user $(id -u) -exec chown -R $(id -u):$(id -g) {} \; 2>/dev/null || true
-fi
+# 设置正确的权限
+echo "设置正确的权限..."
+find /app -not -user $(id -u) -exec chown -R $(id -u):$(id -g) {} \; 2>/dev/null || true
 
 echo "==================================================="
 echo "ComfyUI正在启动。服务器将在以下地址可用:"
