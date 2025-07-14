@@ -33,15 +33,6 @@ if [ -d "/app/custom_nodes" ]; then
     fi
 fi
 
-# 设置其他重要目录权限
-echo "设置其他重要目录权限..."
-for dir in "/app/output" "/app/user" "/app/temp"; do
-    if [ -d "$dir" ]; then
-        echo "设置 $dir 权限"
-        chown -R 1001:1001 "$dir" 2>/dev/null || echo "无法设置 $dir 权限，可能需要sudo权限"
-    fi
-done
-
 # 确保custom_nodes下的所有文件都有写权限
 if [ -d "/app/custom_nodes" ]; then
     echo "确保custom_nodes下文件的写权限..."

@@ -25,6 +25,9 @@ ComfyUI Docker容器启动时遇到多个权限和依赖问题：
 - ✅ 改进错误处理和日志输出
 - ✅ 配置pip使用清华源（国内运行环境）
 
+### 4. 新增节点
+- ✅ 添加ComfyUI-DD-Translation翻译节点
+
 ## 受影响的节点
 - ComfyUI_InstantID (insightface)
 - ComfyUI-ReActor (insightface)
@@ -38,6 +41,7 @@ ComfyUI Docker容器启动时遇到多个权限和依赖问题：
 - [x] 更新权限设置脚本
 - [x] 修改Dockerfile
 - [x] 优化启动脚本
+- [x] 添加ComfyUI-DD-Translation翻译节点
 - [ ] 测试和验证
 
 ## 下一步

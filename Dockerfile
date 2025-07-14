@@ -87,6 +87,7 @@ RUN mkdir -p /app/custom_nodes && \
     git clone --depth=1 https://github.com/kijai/ComfyUI-3D-Pack.git && \
     git clone --depth=1 https://github.com/AlexanderDzhoganov/comfyui-dream-video-batches.git && \
     git clone --depth=1 https://github.com/Phando/ComfyUI-nunchaku.git && \
+    git clone --depth=1 https://github.com/Dontdrunk/ComfyUI-DD-Translation.git && \
     find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true
 
 # Copy scripts
