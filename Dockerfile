@@ -88,7 +88,8 @@ RUN mkdir -p /app/custom_nodes && \
     git clone --depth=1 https://github.com/AlexanderDzhoganov/comfyui-dream-video-batches.git && \
     git clone --depth=1 https://github.com/Phando/ComfyUI-nunchaku.git && \
     git clone --depth=1 https://github.com/Dontdrunk/ComfyUI-DD-Translation.git && \
-    git clone --depth=1 https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet.git comfyui_custom_nodes_alekpet && \
+    git clone --depth=1 https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet.git && \
+    git clone --depth=1 https://github.com/TTPlanetPig/Comfyui_TTP_Toolset.git && \
     find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "go" -exec chmod +x {} \; 2>/dev/null || true && \
@@ -181,4 +182,4 @@ ENTRYPOINT ["/app/entrypoint.sh"]
 EXPOSE 8188
 
 # Command
-CMD ["python3.11", "main.py", "--listen", "0.0.0.0", "--port", "8188", "--enable-cors-header"] 
+CMD ["python3.11", "main.py", "--listen", "0.0.0.0", "--port", "8188", "--enable-cors-header"]
