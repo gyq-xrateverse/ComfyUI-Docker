@@ -105,18 +105,17 @@ RUN mkdir -p /app/custom_nodes && \
     find /app/custom_nodes -type f -name "go" -exec chmod +x {} \; 2>/dev/null || true && \
     find /app/custom_nodes -path "*/bin/*" -type f -exec chmod +x {} \; 2>/dev/null || true
 
-# Copy scripts
-COPY scripts/gather_requirements.py /app/scripts/
-COPY scripts/problematic_requirements.txt /app/scripts/
-COPY scripts/install_packages.sh /app/scripts/
+# Copy required scripts and set permissions
 COPY scripts/setup_external_data.sh /app/scripts/
 COPY scripts/set_permissions.sh /app/scripts/
-RUN mkdir -p /app/scripts && chmod +x /app/scripts/setup_external_data.sh && chmod +x /app/scripts/set_permissions.sh
+COPY scripts/build_dependencies.py /app/scripts/
+RUN mkdir -p /app/scripts && \
+    chmod +x /app/scripts/setup_external_data.sh && \
+    chmod +x /app/scripts/set_permissions.sh && \
+    chmod +x /app/scripts/build_dependencies.py
 
 # Run the unified dependency builder
-COPY scripts/build_dependencies.py /app/scripts/
-RUN chmod +x /app/scripts/build_dependencies.py && \
-    python /app/scripts/build_dependencies.py
+RUN python /app/scripts/build_dependencies.py
 
 # Set environment variables
 ENV PYTHONPATH=/app
