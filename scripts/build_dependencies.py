@@ -33,7 +33,7 @@ LOGGER = logging.getLogger(__name__)
 
 # 将从这些源收集所有需求
 REQUIREMENTS_SOURCES = [
-    "https://github.com/comfyanonymous/ComfyUI/raw/master/requirements.txt",
+"https://github.com/comfyanonymous/ComfyUI/raw/master/requirements.txt",
     "https://github.com/crystian/ComfyUI-Crystools/raw/main/requirements.txt",
     "https://github.com/cubiq/ComfyUI_essentials/raw/main/requirements.txt",
     "https://github.com/cubiq/ComfyUI_FaceAnalysis/raw/main/requirements.txt",
@@ -62,13 +62,15 @@ REQUIREMENTS_SOURCES = [
     "https://github.com/kijai/ComfyUI-IC-Light/raw/main/requirements.txt",
     "https://github.com/siliconflow/BizyAir/raw/master/requirements.txt",
     "https://github.com/lldacing/comfyui-easyapi-nodes/raw/master/requirements.txt",
-    "https://github.com/aptx4869ntu/ComfyUI-Apt_Preset/raw/main/requirements.txt",
+    # 新增的自定义节点 requirements
+    "https://github.com/cardenluo/ComfyUI-Apt_Preset/raw/main/requirements.txt",
     "https://github.com/MinusZoneAI/ComfyUI-MingNodes/raw/main/requirements.txt",
     "https://github.com/kijai/ComfyUI-FluxTrainer/raw/main/requirements.txt",
     "https://github.com/Phando/ComfyUI-nunchaku/raw/main/requirements.txt",
     "https://github.com/AlexanderDzhoganov/comfyui-dream-video-batches/raw/main/requirements.txt",
     "https://github.com/kijai/ComfyUI-3D-Pack/raw/main/requirements.txt",
-    "https://github.com/kealiu/comfyui-supir/raw/main/requirements.txt",
+    "https://github.com/kijai/ComfyUI-SUPIR/raw/main/requirements.txt",
+    "https://github.com/kijai/ComfyUI-GIMM-VFI/raw/main/requirements.txt",
 ]
 
 # 基础软件包，必须固定到特定版本。
