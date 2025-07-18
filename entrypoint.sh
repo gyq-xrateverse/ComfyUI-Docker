@@ -50,67 +50,17 @@ download_model() {
 }
 
 # 如果请求，下载示例模型
-if [ "${DOWNLOAD_EXAMPLE_MODELS:-false}" = "true" ]; then
-    # SD 1.5 模型
-    download_model "https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors" "/app/models/checkpoints"
+# if [ "${DOWNLOAD_EXAMPLE_MODELS:-false}" = "true" ]; then
+#     # SD 1.5 模型
+#     download_model "https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors" "/app/models/checkpoints"
     
-    # 超分辨率模型
-    download_model "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth" "/app/models/upscale_models"
+#     # 超分辨率模型
+#     download_model "https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth" "/app/models/upscale_models"
     
-    # ControlNet 模型
-    download_model "https://huggingface.co/lllyasviel/ControlNet-v1-1/resolve/main/control_v11p_sd15_canny.pth" "/app/models/controlnet"
-    download_model "https://huggingface.co/lllyasviel/ControlNet-v1-1/resolve/main/control_v11p_sd15_openpose.pth" "/app/models/controlnet"
-fi
-
-# 检查缺失的关键包
-echo "检查缺失的关键包..."
-missing_packages=()
-
-# 检查关键包
-packages=("insightface" "toolz" "plyfile" "deep_translator")
-for package in "${packages[@]}"; do
-    if ! python3.11 -c "import $package" 2>/dev/null; then
-        missing_packages+=("$package")
-    fi
-done
-
-# 安装缺失的包
-if [ ${#missing_packages[@]} -gt 0 ]; then
-    echo "发现缺失的包: ${missing_packages[*]}"
-    echo "配置pip使用清华源..."
-    python3.11 -m pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-    python3.11 -m pip config set global.trusted-host pypi.tuna.tsinghua.edu.cn
-    
-    for package in "${missing_packages[@]}"; do
-        echo "正在安装 $package..."
-        case $package in
-            "insightface")
-                python3.11 -m pip install --no-cache-dir insightface==0.7.3 -i https://pypi.tuna.tsinghua.edu.cn/simple || echo "安装 $package 失败，将继续运行"
-                ;;
-            "toolz")
-                python3.11 -m pip install --no-cache-dir toolz -i https://pypi.tuna.tsinghua.edu.cn/simple || echo "安装 $package 失败，将继续运行"
-                ;;
-            "plyfile")
-                python3.11 -m pip install --no-cache-dir plyfile -i https://pypi.tuna.tsinghua.edu.cn/simple || echo "安装 $package 失败，将继续运行"
-                ;;
-            "deep_translator")
-                python3.11 -m pip install --no-cache-dir deep_translator -i https://pypi.tuna.tsinghua.edu.cn/simple || echo "安装 $package 失败，将继续运行"
-                ;;
-            *)
-                python3.11 -m pip install --no-cache-dir "$package" -i https://pypi.tuna.tsinghua.edu.cn/simple || echo "安装 $package 失败，将继续运行"
-                ;;
-        esac
-    done
-else
-    echo "所有关键包已安装。"
-fi
-
-# 如果requirements文件不存在，则生成
-if [ ! -f "/app/requirements.txt" ] || [ "${REGENERATE_REQUIREMENTS:-false}" = "true" ]; then
-    echo "生成requirements.txt..."
-    python3.11 /app/scripts/gather_requirements.py
-    python3.11 -m pip install -r /app/requirements.txt
-fi
+#     # ControlNet 模型
+#     download_model "https://huggingface.co/lllyasviel/ControlNet-v1-1/resolve/main/control_v11p_sd15_canny.pth" "/app/models/controlnet"
+#     download_model "https://huggingface.co/lllyasviel/ControlNet-v1-1/resolve/main/control_v11p_sd15_openpose.pth" "/app/models/controlnet"
+# fi
 
 # 如果存在用户提供的初始化脚本，则运行
 if [ -f "/app/custom_init.sh" ]; then
@@ -147,14 +97,6 @@ find /app/custom_nodes -type f \( -name "*server*" -o -name "*daemon*" -o -name 
 # 为所有custom_nodes子目录设置递归权限（确保目录权限正确）
 find /app/custom_nodes -type d -exec chmod 755 {} \; 2>/dev/null || true
 
-# 特别处理已知的问题文件
-echo "检查并修复已知问题文件..."
-if [ -f "/app/custom_nodes/comfyui_custom_nodes_alekpet/DeepLXTranslateNode/go/bin/go" ]; then
-    echo "发现DeepLXTranslateNode的go二进制文件，设置执行权限..."
-    chmod +x "/app/custom_nodes/comfyui_custom_nodes_alekpet/DeepLXTranslateNode/go/bin/go" 2>/dev/null || true
-    ls -la "/app/custom_nodes/comfyui_custom_nodes_alekpet/DeepLXTranslateNode/go/bin/go" 2>/dev/null || echo "文件不存在或无权限查看"
-fi
-
 echo "============================================"
 echo "ComfyUI启动前检查..."
 
@@ -170,7 +112,7 @@ fi
 
 echo "==================================================="
 echo "ComfyUI正在启动。服务器将在以下地址可用:"
-echo "http://localhost:8188 (如果端口8188已暴露)"
+echo "http://localhost:10001 (如果端口10001已暴露)"
 echo "==================================================="
 
 # 执行CMD

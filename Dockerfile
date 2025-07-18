@@ -39,6 +39,15 @@ RUN apt-get update && apt-get install -y \
 RUN ln -sf /usr/bin/python3.11 /usr/bin/python && \
     ln -sf /usr/bin/python3.11 /usr/bin/python3
 
+# 设置 Python 虚拟环境（隔离系统包，防止 install_layout 冲突）
+RUN python3.11 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
+ENV VIRTUAL_ENV="/venv"
+
+# 升级 pip、降级 setuptools/wheel
+RUN pip install --upgrade pip && \
+    pip install "setuptools<68" "wheel<0.41"
+
 # Set working directory
 WORKDIR /app
 
@@ -102,62 +111,12 @@ COPY scripts/problematic_requirements.txt /app/scripts/
 COPY scripts/install_packages.sh /app/scripts/
 COPY scripts/setup_external_data.sh /app/scripts/
 COPY scripts/set_permissions.sh /app/scripts/
-RUN mkdir -p /app/scripts && chmod +x /app/scripts/install_packages.sh && chmod +x /app/scripts/setup_external_data.sh && chmod +x /app/scripts/set_permissions.sh
+RUN mkdir -p /app/scripts && chmod +x /app/scripts/setup_external_data.sh && chmod +x /app/scripts/set_permissions.sh
 
-# Run the requirement gathering script
-RUN cd /app && python3.11 /app/scripts/gather_requirements.py
-
-# Install Torch with CUDA support and xformers first
-RUN python3.11 -m pip install --no-cache-dir torch==2.6.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124 --extra-index-url https://pypi.org/simple && \
-    python3.11 -m pip install --no-cache-dir xformers==0.0.29.post3
-
-# Install problematic packages directly with fallback strategies
-RUN echo "Installing problematic packages directly..." && \
-    python3.11 -m pip install --no-cache-dir sortedcontainers==2.4.0 || echo "Failed to install sortedcontainers" && \
-    python3.11 -m pip install --no-cache-dir pyhocon==0.3.59 || echo "Failed to install pyhocon" && \
-    python3.11 -m pip install --no-cache-dir fal-client==0.6.0 || echo "Failed to install fal-client" && \
-    python3.11 -m pip install --no-cache-dir imagesize==1.4.1 || echo "Failed to install imagesize" && \
-    python3.11 -m pip install --no-cache-dir evalidate==2.0.5 || echo "Failed to install evalidate" && \
-    python3.11 -m pip install --no-cache-dir litelama==0.1.7 || echo "Failed to install litelama" && \
-    python3.11 -m pip install --no-cache-dir pytorch-lightning==2.5.2 || echo "Failed to install pytorch-lightning" && \
-    python3.11 -m pip install --no-cache-dir nunchaku==0.15.4 || echo "Failed to install nunchaku" && \
-    python3.11 -m pip install --no-cache-dir voluptuous==0.15.2 || echo "Failed to install voluptuous" && \
-    python3.11 -m pip install --no-cache-dir gguf==0.17.1 || echo "Failed to install gguf" && \
-    python3.11 -m pip install --no-cache-dir argostranslate==1.9.6 || echo "Failed to install argostranslate" && \
-    python3.11 -m pip install --no-cache-dir bizyengine==1.2.33 || echo "Failed to install bizyengine"
-
-# Install more complex packages with special handling
-RUN echo "Installing dlib with special handling..." && \
-    python3.11 -m pip install --no-cache-dir dlib==19.24.2 --only-binary=:all: || \
-    python3.11 -m pip install --no-cache-dir --no-build-isolation dlib==19.24.2 || \
-    echo "Failed to install dlib"
-
-RUN echo "Installing insightface with special handling..." && \
-    python3.11 -m pip install --no-cache-dir --upgrade --prefer-binary insightface==0.7.3 || \
-    echo "insightface installation failed"
-
-RUN echo "Installing fairscale with special handling..." && \
-    python3.11 -m pip install --no-cache-dir fairscale==0.4.13 --only-binary=:all: || \
-    python3.11 -m pip install --no-cache-dir --no-build-isolation fairscale==0.4.13 || \
-    echo "Failed to install fairscale"
-
-# Run the requirement gathering script and install remaining dependencies
-RUN cd /app && python3.11 /app/scripts/gather_requirements.py && \
-    python3.11 -m pip install --no-cache-dir -r /app/requirements.txt || echo "Some packages failed to install"
-
-# Verify critical packages installation
-RUN echo "Verifying package installation..." && \
-    python3.11 -c "import sortedcontainers; print('✓ sortedcontainers installed')" || echo "✗ sortedcontainers missing" && \
-    python3.11 -c "import pyhocon; print('✓ pyhocon installed')" || echo "✗ pyhocon missing" && \
-    python3.11 -c "import imagesize; print('✓ imagesize installed')" || echo "✗ imagesize missing" && \
-    python3.11 -c "import evalidate; print('✓ evalidate installed')" || echo "✗ evalidate missing" && \
-    python3.11 -c "import litelama; print('✓ litelama installed')" || echo "✗ litelama missing" && \
-    python3.11 -c "import pytorch_lightning; print('✓ pytorch_lightning installed')" || echo "✗ pytorch_lightning missing" && \
-    python3.11 -c "import nunchaku; print('✓ nunchaku installed')" || echo "✗ nunchaku missing" && \
-    python3.11 -c "import insightface; print('✓ insightface installed')" || echo "✗ insightface missing" && \
-    python3.11 -c "import toolz; print('✓ toolz installed')" || echo "✗ toolz missing" && \
-    python3.11 -c "import plyfile; print('✓ plyfile installed')" || echo "✗ plyfile missing" && \
-    echo "Package verification completed"
+# Run the unified dependency builder
+COPY scripts/build_dependencies.py /app/scripts/
+RUN chmod +x /app/scripts/build_dependencies.py && \
+    python /app/scripts/build_dependencies.py
 
 # Set environment variables
 ENV PYTHONPATH=/app
@@ -168,17 +127,13 @@ COPY entrypoint.sh /app/
 RUN chmod +x /app/entrypoint.sh && \
     mkdir -p /app/models /app/output /app/user /app/temp
 
-# Install additional packages that might fail during main installation
-RUN python3.11 -m pip install --no-cache-dir toolz || echo "toolz installation failed, will retry later" && \
-    python3.11 -m pip install --no-cache-dir plyfile || echo "plyfile installation failed, will retry later"
-
 # Run as root user
 
 # Set the entrypoint
 ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Default port
-EXPOSE 8188
+EXPOSE 10001
 
 # Command
-CMD ["python3.11", "main.py", "--listen", "0.0.0.0", "--port", "8188", "--enable-cors-header"]
+CMD ["python", "main.py", "--listen", "0.0.0.0", "--port", "10001", "--enable-cors-header"]
