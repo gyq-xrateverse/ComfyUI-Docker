@@ -90,6 +90,7 @@ RUN mkdir -p /app/custom_nodes && \
     git clone --depth=1 https://github.com/Dontdrunk/ComfyUI-DD-Translation.git && \
     git clone --depth=1 https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet.git && \
     git clone --depth=1 https://github.com/TTPlanetPig/Comfyui_TTP_Toolset.git && \
+    git clone --depth=1 https://github.com/ZenAI-Vietnam/ComfyUI-Kontext-Inpainting.git && \
     find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "go" -exec chmod +x {} \; 2>/dev/null || true && \
@@ -132,9 +133,8 @@ RUN echo "Installing dlib with special handling..." && \
     echo "Failed to install dlib"
 
 RUN echo "Installing insightface with special handling..." && \
-    python3.11 -m pip install --no-cache-dir insightface==0.7.3 --only-binary=:all: || \
-    python3.11 -m pip install --no-cache-dir --no-deps insightface==0.7.3 || \
-    echo "Failed to install insightface"
+    python3.11 -m pip install --no-cache-dir --upgrade --prefer-binary insightface==0.7.3 || \
+    echo "insightface installation failed"
 
 RUN echo "Installing fairscale with special handling..." && \
     python3.11 -m pip install --no-cache-dir fairscale==0.4.13 --only-binary=:all: || \
@@ -169,8 +169,7 @@ RUN chmod +x /app/entrypoint.sh && \
     mkdir -p /app/models /app/output /app/user /app/temp
 
 # Install additional packages that might fail during main installation
-RUN python3.11 -m pip install --no-cache-dir insightface==0.7.3 || echo "insightface installation failed, will retry later" && \
-    python3.11 -m pip install --no-cache-dir toolz || echo "toolz installation failed, will retry later" && \
+RUN python3.11 -m pip install --no-cache-dir toolz || echo "toolz installation failed, will retry later" && \
     python3.11 -m pip install --no-cache-dir plyfile || echo "plyfile installation failed, will retry later"
 
 # Run as root user

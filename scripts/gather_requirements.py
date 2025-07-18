@@ -49,7 +49,7 @@ REPO_REQUIREMENTS = [
     "https://github.com/kijai/ComfyUI-GIMM-VFI/raw/main/requirements.txt",
 ]
 
-# Additional packages that might be needed
+# 可能需要的其他软件包
 ADDITIONAL_PACKAGES = [
     "torch==2.6.0",
     "torchvision",
@@ -59,13 +59,14 @@ ADDITIONAL_PACKAGES = [
     "opencv-contrib-python==4.8.0.76",
     "sageattention==1.0.6",
     "bizyengine==1.2.4",
+    "decord",
     # 从错误日志中识别的缺失包
     "sortedcontainers==2.4.0",
     "pyhocon==0.3.59",
     "fal-client==0.6.0",
 ]
 
-# Packages to exclude (will be installed separately)
+# 要排除的软件包（将单独安装）
 EXCLUDED_PACKAGES = [
     "insightface",
     "dlib", 

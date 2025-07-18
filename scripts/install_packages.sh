@@ -10,6 +10,14 @@ install_package() {
     local package=$1
     local version=$2
     
+    # Special handling for insightface
+    if [ "$package" = "insightface" ]; then
+        echo "Installing insightface with optimized command..."
+        python3.11 -m pip install --no-cache-dir --upgrade --prefer-binary "insightface==$version" && return 0
+        echo "Warning: Failed to install insightface with optimized command, continuing..."
+        return 0
+    fi
+    
     echo "Trying to install $package==$version..."
     
     # Try method 1: Install from binary wheel

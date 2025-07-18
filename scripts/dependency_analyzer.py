@@ -47,7 +47,7 @@ class DependencyAnalyzer:
         try:
             return Requirement(req_str)
         except Exception as e:
-            print(f"Warning: Could not parse requirement: {req_str} - {e}", file=sys.stderr)
+            print(f"警告：无法解析需求：{req_str} - {e}", file=sys.stderr)
             return None
     
     def detect_version_conflicts(self):
@@ -220,7 +220,7 @@ def fetch_requirements_from_url(url: str) -> List[str]:
             content = response.read().decode('utf-8')
             return content.splitlines()
     except Exception as e:
-        print(f"Warning: Failed to fetch {url}: {e}", file=sys.stderr)
+        print(f"警告：无法从 {url} 获取需求：{e}", file=sys.stderr)
         return []
 
 def main():
