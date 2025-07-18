@@ -46,7 +46,7 @@ ENV VIRTUAL_ENV="/venv"
 
 # 升级 pip、降级 setuptools/wheel
 RUN pip install --upgrade pip && \
-    pip install "setuptools<68" "wheel<0.41"
+    pip install "setuptools<68" "wheel<0.41" "packaging"
 
 # Set working directory
 WORKDIR /app
@@ -89,7 +89,6 @@ RUN mkdir -p /app/custom_nodes && \
     git clone --depth=1 https://github.com/siliconflow/BizyAir.git && \
     git clone --depth=1 https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch.git && \
     git clone --depth=1 https://github.com/lldacing/comfyui-easyapi-nodes.git && \
-    git clone --depth=1 https://github.com/aptx4869ntu/ComfyUI-Apt_Preset.git && \
     git clone --depth=1 https://github.com/MinusZoneAI/ComfyUI-MingNodes.git && \
     git clone --depth=1 https://github.com/kijai/ComfyUI-FluxTrainer.git && \
     git clone --depth=1 https://github.com/kealiu/comfyui-supir.git && \
