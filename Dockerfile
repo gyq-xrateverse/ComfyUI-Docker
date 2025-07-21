@@ -102,16 +102,19 @@ RUN mkdir -p /app/custom_nodes && \
     find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "go" -exec chmod +x {} \; 2>/dev/null || true && \
-    find /app/custom_nodes -path "*/bin/*" -type f -exec chmod +x {} \; 2>/dev/null || true
+    find /app/custom_nodes -path "*/bin/*" -type f -exec chmod +x {} \; 2>/dev/null || true && \
+    find /app/custom_nodes -type d -exec chmod 755 {} \; 2>/dev/null || true
 
 # Copy required scripts and set permissions
 COPY scripts/setup_external_data.sh /app/scripts/
 COPY scripts/set_permissions.sh /app/scripts/
 COPY scripts/build_dependencies.py /app/scripts/
+COPY scripts/verify_dependencies.py /app/scripts/
 RUN mkdir -p /app/scripts && \
     chmod +x /app/scripts/setup_external_data.sh && \
     chmod +x /app/scripts/set_permissions.sh && \
-    chmod +x /app/scripts/build_dependencies.py
+    chmod +x /app/scripts/build_dependencies.py && \
+    chmod +x /app/scripts/verify_dependencies.py
 
 # Run the unified dependency builder
 RUN python /app/scripts/build_dependencies.py
@@ -134,4 +137,4 @@ ENTRYPOINT ["/app/entrypoint.sh"]
 EXPOSE 10001
 
 # Command
-CMD ["python", "main.py", "--listen", "0.0.0.0", "--port", "10001", "--enable-cors-header", "--disable-pip-install"]
+CMD ["python", "main.py", "--listen", "0.0.0.0", "--port", "10001", "--enable-cors-header"]
