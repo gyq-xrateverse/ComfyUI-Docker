@@ -25,9 +25,9 @@ LOGGER = logging.getLogger(__name__)
 # 这些是项目的核心依赖，必须固定到特定版本。
 # 此脚本将在每次容器启动时强制安装这些版本，以覆盖任何由自定义节点引起的不兼容更改。
 PINNED_PACKAGES = {
-    "torch": "2.6.0",
-    "torchvision": "0.19.0",
-    "torchaudio": "2.5.0",
+    "torch": "2.3.1",
+    "torchvision": "0.18.1",
+    "torchaudio": "2.3.1",
     "xformers": "0.0.29.post3",
     "numpy": "1.26.4",
 }
