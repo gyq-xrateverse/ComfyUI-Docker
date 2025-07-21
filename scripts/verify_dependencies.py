@@ -32,6 +32,9 @@ PINNED_PACKAGES = {
     "numpy": "1.26.4",
 }
 
+# PyPI 镜像源
+PIP_INDEX_URL = "https://pypi.tuna.tsinghua.edu.cn/simple"
+
 # PyTorch专用下载源
 TORCH_INDEX_URL = "https://download.pytorch.org/whl/cu124"
 
@@ -61,9 +64,11 @@ def verify_and_install():
         # 使用--no-deps防止在重新安装核心包时牵连到其他包
         install_args = ["install", "--force-reinstall", "--no-dependencies", package_spec]
 
-        # 对torch相关包使用专用源
+        # 对torch相关包使用专用源，其他包使用配置的镜像源
         if name.lower() in ["torch", "torchvision", "torchaudio"]:
-            install_args.extend(["--index-url", TORCH_INDEX_URL, "--extra-index-url", "https://pypi.org/simple"])
+            install_args.extend(["--index-url", TORCH_INDEX_URL, "--extra-index-url", PIP_INDEX_URL])
+        else:
+            install_args.extend(["--index-url", PIP_INDEX_URL])
 
         LOGGER.info(f"正在强制安装/验证: {package_spec}")
         try:
