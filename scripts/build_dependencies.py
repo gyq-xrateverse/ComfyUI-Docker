@@ -80,6 +80,7 @@ PINNED_PACKAGES = {
     "torchvision": "0.19.0",
     "torchaudio": "2.5.0",
     "xformers": "0.0.29.post3",
+    "numpy": "1.26.4",
 }
 
 # PyTorch专用下载源
@@ -188,13 +189,28 @@ class DependencyInstaller:
             except subprocess.CalledProcessError:
                 LOGGER.error(f"安装 {package_spec} 失败。构建可能会失败。")
 
-    def _run_pip(self, args):
-        """使用通用选项和错误处理来运行pip命令。"""
+    def _run_pip(self, args, retries=3, backoff_factor=2):
+        """使用通用选项、重试和错误处理来运行pip命令。"""
         command = [sys.executable, "-m", "pip", "--no-cache-dir"] + args
         LOGGER.info(f"执行: {' '.join(command)}")
-        subprocess.run(command, check=True, stdout=sys.stdout, stderr=sys.stderr)
+        
+        for attempt in range(retries):
+            try:
+                subprocess.run(command, check=True, stdout=sys.stdout, stderr=sys.stderr)
+                return  # 成功，退出函数
+            except subprocess.CalledProcessError as e:
+                if attempt + 1 == retries:
+                    LOGGER.error(f"命令在 {retries} 次尝试后最终失败。")
+                    raise e
+                
+                sleep_time = backoff_factor * (2 ** attempt)
+                LOGGER.warning(
+                    f"命令失败 (尝试 {attempt + 1}/{retries})。将在 {sleep_time} 秒后重试..."
+                )
+                time.sleep(sleep_time)
 
 
 if __name__ == "__main__":
+    import time
     installer = DependencyInstaller()
     installer.run() 

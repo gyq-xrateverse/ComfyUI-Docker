@@ -134,4 +134,4 @@ ENTRYPOINT ["/app/entrypoint.sh"]
 EXPOSE 10001
 
 # Command
-CMD ["python", "main.py", "--listen", "0.0.0.0", "--port", "10001", "--enable-cors-header"]
+CMD ["python", "main.py", "--listen", "0.0.0.0", "--port", "10001", "--enable-cors-header", "--disable-pip-install"]
