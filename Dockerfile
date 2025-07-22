@@ -1,8 +1,8 @@
 ARG PYTHON_VERSION=3.11
 ARG CUDA_VERSION=12.9.0
-FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu22.04
+FROM nvidia/cuda:${CUDA_VERSION}-cudnn-devel-ubuntu24.04
 
-# Set non-interactive installation
+# Set non-interactive installation12.9.0-cudnn-devel-ubuntu24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install required packages
