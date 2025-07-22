@@ -44,7 +44,7 @@ PINNED_PACKAGES = {
     "torch": "2.6.0",
     "torchvision": "0.21.0",
     "torchaudio": "2.6.0",
-    "xformers": "0.0.29.post1",
+    "xformers": "v0.0.29.post2",
     "numpy": "1.26.4"
 }
 
