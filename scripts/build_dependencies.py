@@ -252,7 +252,6 @@ class DependencyInstaller:
                 )
                 time.sleep(sleep_time)
 
-
 if __name__ == "__main__":
     installer = DependencyInstaller()
     installer.run() 
