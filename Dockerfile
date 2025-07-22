@@ -117,7 +117,7 @@ RUN mkdir -p /app/scripts && \
     chmod +x /app/scripts/verify_dependencies.py
 
 # --- 在构建时预安装核心依赖 ---
-RUN python /app/scripts/verify_dependencies.py
+# RUN python /app/scripts/verify_dependencies.py
 
 # Run the unified dependency builder
 RUN python /app/scripts/build_dependencies.py
