@@ -8,11 +8,19 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install required packages and manually install cuDNN
 RUN apt-get update && apt-get install -y \
     software-properties-common \
+    ca-certificates \
+    curl \
+    wget \
     && add-apt-repository ppa:deadsnakes/ppa \
+    # --- Configure NVIDIA APT repository for cuDNN ---
+    && CUDNN_VERSION="8.9.7.29" \
+    && CUDA_VERSION_MAJOR_MINOR=$(echo "${CUDA_VERSION}" | cut -d. -f1-2 | tr -d .) \
+    && apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub" \
+    && echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" > /etc/apt/sources.list.d/cuda.list \
+    && echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2204/x86_64/ /" > /etc/apt/sources.list.d/nvidia-ml.list \
+    # --- Install packages ---
     && apt-get update && apt-get install -y \
     git \
-    wget \
-    curl \
     python3.11 \
     python3.11-dev \
     python3.11-venv \
@@ -32,20 +40,9 @@ RUN apt-get update && apt-get install -y \
     liblapack-dev \
     libx11-dev \
     libgtk-3-dev \
-    # --- Manually install cuDNN 8 ---
-    && CUDNN_VERSION="8.9.7.29" \
-    && ARCH=$(dpkg --print-architecture) \
-    && case ${ARCH} in \
-        "amd64") ARCH_SUFFIX="linux-x86_64" ;; \
-        "arm64") ARCH_SUFFIX="linux-sbsa" ;; \
-        *) echo "Unsupported architecture: ${ARCH}"; exit 1 ;; \
-    esac \
-    && wget https://developer.download.nvidia.com/compute/cudnn/v${CUDNN_VERSION}/local_installers/cudnn-${ARCH_SUFFIX}-v${CUDNN_VERSION}.tgz -O cudnn.tgz \
-    && tar -xvf cudnn.tgz \
-    && cp -P cudnn-*-v${CUDNN_VERSION}/lib/* /usr/local/cuda/lib64/ \
-    && cp -P cudnn-*-v${CUDNN_VERSION}/include/* /usr/local/cuda/include/ \
-    && rm -rf cudnn.tgz cudnn-*-v${CUDNN_VERSION} \
-    && ldconfig \
+    # Install specific cuDNN version
+    libcudnn8=${CUDNN_VERSION}-1+cuda${CUDA_VERSION_MAJOR_MINOR} \
+    libcudnn8-dev=${CUDNN_VERSION}-1+cuda${CUDA_VERSION_MAJOR_MINOR} \
     # --- Cleanup ---
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
