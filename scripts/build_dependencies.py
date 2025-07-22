@@ -20,6 +20,7 @@ import urllib.request
 from collections import defaultdict
 from packaging.requirements import Requirement
 from packaging.version import parse as parse_version
+import time
 
 # --- 基本设置 ---
 logging.basicConfig(
@@ -77,16 +78,24 @@ REQUIREMENTS_SOURCES = [
 
 # 基础软件包，必须固定到特定版本。
 # 它们在解决阶段被注入。
+# "numpy": "1.26.4"
+
+# PINNED_PACKAGES = {
+#     "torch": "2.5.1",
+#     "torchvision": "0.20.1",
+#     "torchaudio": "2.5.1",
+#     "xformers": "0.0.29.post1"
+# }
+
 PINNED_PACKAGES = {
     "torch": "2.6.0",
-    "torchvision": "0.19.0",
-    "torchaudio": "2.5.0",
-    "xformers": "0.0.29.post3",
-    "numpy": "1.26.4",
+    "torchvision": "0.21.0",
+    "torchaudio": "2.6.0",
+    "xformers": "v0.0.29.post3"
 }
 
 # PyTorch专用下载源
-TORCH_INDEX_URL = "https://download.pytorch.org/whl/cu124"
+TORCH_INDEX_URL = "https://download.pytorch.org/whl/cu121"
 
 class DependencyInstaller:
     """协调依赖项的获取、解决和安装。"""
@@ -120,7 +129,7 @@ class DependencyInstaller:
                     content = response.read().decode('utf-8')
                     for line in content.splitlines():
                         req_str = line.strip()
-                        if not req_str or req_str.startswith('#'):
+                        if not req_str or req_str.startswith('#') or req_str.startswith('-'):
                             continue
                         try:
                             req = Requirement(req_str)
@@ -213,6 +222,5 @@ class DependencyInstaller:
 
 
 if __name__ == "__main__":
-    import time
     installer = DependencyInstaller()
     installer.run() 
