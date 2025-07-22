@@ -108,6 +108,7 @@ RUN mkdir -p /app/custom_nodes && \
     git clone --depth=1 https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet.git && \
     git clone --depth=1 https://github.com/TTPlanetPig/Comfyui_TTP_Toolset.git && \
     git clone --depth=1 https://github.com/ZenAI-Vietnam/ComfyUI-Kontext-Inpainting.git && \
+    git clone --depth=1 https://github.com/EvilBT/ComfyUI_SLK_joy_caption_two.git && \
     find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "go" -exec chmod +x {} \; 2>/dev/null || true && \
