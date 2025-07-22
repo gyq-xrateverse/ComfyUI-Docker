@@ -11,15 +11,16 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     curl \
     wget \
+    gnupg \
     && add-apt-repository ppa:deadsnakes/ppa \
-    # --- Configure NVIDIA APT repository for cuDNN ---
+    # --- Configure NVIDIA APT repository for cuDNN (Modern, Robust Method) ---
     && CUDNN_VERSION="8.9.7.29" \
     && CUDA_VERSION_MAJOR_MINOR=$(echo "${CUDA_VERSION}" | cut -d. -f1-2 | tr -d .) \
-    && apt-key adv --fetch-keys "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub" \
-    && echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" > /etc/apt/sources.list.d/cuda.list \
-    && echo "deb https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2204/x86_64/ /" > /etc/apt/sources.list.d/nvidia-ml.list \
+    && curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub | gpg --dearmor -o /usr/share/keyrings/nvidia-archive-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/nvidia-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" > /etc/apt/sources.list.d/cuda.list \
+    && echo "deb [signed-by=/usr/share/keyrings/nvidia-archive-keyring.gpg] https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2204/x86_64/ /" > /etc/apt/sources.list.d/nvidia-ml.list \
     # --- Install packages ---
-    && apt-get update && apt-get install -y \
+    && apt-get update && apt-get install -y --no-install-recommends \
     git \
     python3.11 \
     python3.11-dev \
