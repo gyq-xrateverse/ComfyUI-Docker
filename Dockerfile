@@ -1,5 +1,5 @@
 ARG PYTHON_VERSION=3.11
-ARG CUDA_VERSION=12.3.2
+ARG CUDA_VERSION=12.1.1
 FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu22.04
 
 # Set non-interactive installation

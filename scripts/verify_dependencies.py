@@ -87,11 +87,12 @@ def verify_and_install():
         else:
             try:
                 installed_version = importlib_metadata.version(name)
-                if installed_version != version:
+                # 使用startswith而不是==，以兼容带有构建元数据（如 +cu124）的版本号
+                if not installed_version.startswith(version):
                     should_install = True
                     reason = f"版本不匹配 (已安装: {installed_version}, 需要: {version})。"
                 else:
-                    LOGGER.info(f"✓ {name}=={version} 版本正确，无需操作。")
+                    LOGGER.info(f"✓ {name}>={version} 版本正确，无需操作。")
             except importlib_metadata.PackageNotFoundError:
                 should_install = True
                 reason = "包未找到。"
