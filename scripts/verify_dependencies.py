@@ -31,17 +31,18 @@ LOGGER = logging.getLogger(__name__)
 # 这些是项目的核心依赖，必须固定到特定版本。
 # 此脚本将在每次容器启动时强制安装这些版本，以覆盖任何由自定义节点引起的不兼容更改。
 PINNED_PACKAGES = {
-    "torch": "2.7.0",
-    "torchvision": "0.22.0",
-    "torchaudio": "2.7.0",
-    "xformers": "v0.0.30"
+    "torch": "2.5.1",
+    "torchvision": "0.20.1",
+    "torchaudio": "2.5.1",
+    "pytorch-cuda": "12.4",
+    "xformers": "0.0.29.post1"
 }
 
 # PyPI 镜像源
 PIP_INDEX_URL = "https://pypi.tuna.tsinghua.edu.cn/simple"
 
 # PyTorch专用下载源
-TORCH_INDEX_URL = "https://download.pytorch.org/whl/cu128"
+TORCH_INDEX_URL = "https://download.pytorch.org/whl/cu124"
 
 def run_pip(args):
     """运行pip命令并处理输出。"""

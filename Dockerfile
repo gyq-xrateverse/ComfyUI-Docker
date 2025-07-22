@@ -1,11 +1,11 @@
 ARG PYTHON_VERSION=3.11
-ARG CUDA_VERSION=12.8.1
-FROM nvidia/cuda:${CUDA_VERSION}-cudnn-devel-ubuntu22.04
+ARG CUDA_VERSION=12.4.1
+FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu22.04
 
-# Set non-interactive installation12.9.0-cudnn-devel-ubuntu24.04
+# Set non-interactive installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install required packages
+# Install required packages and manually install cuDNN
 RUN apt-get update && apt-get install -y \
     software-properties-common \
     && add-apt-repository ppa:deadsnakes/ppa \
@@ -32,6 +32,21 @@ RUN apt-get update && apt-get install -y \
     liblapack-dev \
     libx11-dev \
     libgtk-3-dev \
+    # --- Manually install cuDNN 8 ---
+    && CUDNN_VERSION="8.9.7.29" \
+    && ARCH=$(dpkg --print-architecture) \
+    && case ${ARCH} in \
+        "amd64") ARCH_SUFFIX="linux-x86_64" ;; \
+        "arm64") ARCH_SUFFIX="linux-sbsa" ;; \
+        *) echo "Unsupported architecture: ${ARCH}"; exit 1 ;; \
+    esac \
+    && wget https://developer.download.nvidia.com/compute/cudnn/v${CUDNN_VERSION}/local_installers/cudnn-${ARCH_SUFFIX}-v${CUDNN_VERSION}.tgz -O cudnn.tgz \
+    && tar -xvf cudnn.tgz \
+    && cp -P cudnn-*-v${CUDNN_VERSION}/lib/* /usr/local/cuda/lib64/ \
+    && cp -P cudnn-*-v${CUDNN_VERSION}/include/* /usr/local/cuda/include/ \
+    && rm -rf cudnn.tgz cudnn-*-v${CUDNN_VERSION} \
+    && ldconfig \
+    # --- Cleanup ---
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
