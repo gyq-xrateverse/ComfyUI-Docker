@@ -30,11 +30,21 @@ LOGGER = logging.getLogger(__name__)
 # --- 配置 ---
 # 这些是项目的核心依赖，必须固定到特定版本。
 # 此脚本将在每次容器启动时强制安装这些版本，以覆盖任何由自定义节点引起的不兼容更改。
+
+# "numpy": "1.26.4"
+
+# PINNED_PACKAGES = {
+#     "torch": "2.5.1",
+#     "torchvision": "0.20.1",
+#     "torchaudio": "2.5.1",
+#     "xformers": "0.0.29.post1"
+# }
+
 PINNED_PACKAGES = {
-    "torch": "2.5.1",
-    "torchvision": "0.20.1",
-    "torchaudio": "2.5.1",
-    "xformers": "0.0.29.post1"
+    "torch": "2.6.0",
+    "torchvision": "0.21.0",
+    "torchaudio": "2.6.0",
+    "xformers": "v0.0.29.post3"
 }
 
 # PyPI 镜像源
