@@ -76,6 +76,15 @@ REQUIREMENTS_SOURCES = [
     "https://github.com/ShmuelRonen/ComfyUI-LatentSyncWrapper/raw/main/requirements.txt"
 ]
 
+# 手动添加的软件包，用于解决依赖获取失败或未在requirements.txt中声明的问题
+MANUAL_PACKAGES = [
+    "litelama",
+    "nunchaku",
+    "evalidate",
+    "pyhocon",
+    "sageattention"
+]
+
 # 基础软件包，必须固定到特定版本。
 # 它们在解决阶段被注入。
 # "numpy": "1.26.4"
@@ -95,7 +104,7 @@ PINNED_PACKAGES = {
 }
 
 # PyTorch专用下载源
-TORCH_INDEX_URL = "https://download.pytorch.org/whl/cu121"
+TORCH_INDEX_URL = "https://download.pytorch.org/whl/cu124"
 
 class DependencyInstaller:
     """协调依赖项的获取、解决和安装。"""
@@ -144,6 +153,20 @@ class DependencyInstaller:
     def _resolve_versions(self):
         """解决版本冲突，并为每个包确定最终版本。"""
         LOGGER.info("正在解决软件包版本...")
+
+        # --- 处理OpenCV冲突 ---
+        # 多个自定义节点依赖不同且互斥的OpenCV包。
+        # 策略：移除所有opencv-*变体，统一使用opencv-contrib-python-headless，
+        # 它功能最全且适合无GUI环境。
+        opencv_keys = [k for k in self.requirements if k.startswith('opencv-')]
+        if opencv_keys:
+            LOGGER.info(f"检测到多个OpenCV变体: {opencv_keys}。正在进行统一处理。")
+            for key in opencv_keys:
+                del self.requirements[key]
+            # 我们将在安装阶段手动添加'opencv-contrib-python-headless'
+            MANUAL_PACKAGES.append("opencv-contrib-python-headless")
+            LOGGER.info("已将所有OpenCV变体替换为 'opencv-contrib-python-headless'。")
+
 
         # 将固定版本的包注入到需求列表中
         for name, version in PINNED_PACKAGES.items():
@@ -199,6 +222,14 @@ class DependencyInstaller:
                 self._run_pip(["install", package_spec] + install_args)
             except subprocess.CalledProcessError:
                 LOGGER.error(f"安装 {package_spec} 失败。构建可能会失败。")
+
+        LOGGER.info(f"正在安装 {len(MANUAL_PACKAGES)} 个手动指定的软件包...")
+        for package_spec in MANUAL_PACKAGES:
+            try:
+                self._run_pip(["install", package_spec])
+            except subprocess.CalledProcessError:
+                LOGGER.error(f"安装手动指定的软件包 {package_spec} 失败。")
+
 
     def _run_pip(self, args, retries=3, backoff_factor=2):
         """使用通用选项、重试和错误处理来运行pip命令。"""
