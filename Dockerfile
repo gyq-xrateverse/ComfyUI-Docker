@@ -5,21 +5,17 @@ FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu22.04
 # Set non-interactive installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install required packages and manually install cuDNN
-RUN apt-get update && apt-get install -y \
+# Install required packages and cuDNN from pre-configured NVIDIA repository
+RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common \
     ca-certificates \
     curl \
     wget \
-    gnupg \
     && add-apt-repository ppa:deadsnakes/ppa \
-    # --- Configure NVIDIA APT repository for cuDNN (Modern, Robust Method) ---
+    # The -devel base image already includes the NVIDIA repos.
+    # We just need to update and install.
     && CUDNN_VERSION="8.9.7.29" \
     && CUDA_VERSION_MAJOR_MINOR=$(echo "${CUDA_VERSION}" | cut -d. -f1-2 | tr -d .) \
-    && curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/3bf863cc.pub | gpg --dearmor -o /usr/share/keyrings/nvidia-archive-keyring.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/nvidia-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" > /etc/apt/sources.list.d/cuda.list \
-    && echo "deb [signed-by=/usr/share/keyrings/nvidia-archive-keyring.gpg] https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu2204/x86_64/ /" > /etc/apt/sources.list.d/nvidia-ml.list \
-    # --- Install packages ---
     && apt-get update && apt-get install -y --no-install-recommends \
     git \
     python3.11 \
@@ -41,7 +37,7 @@ RUN apt-get update && apt-get install -y \
     liblapack-dev \
     libx11-dev \
     libgtk-3-dev \
-    # Install specific cuDNN version
+    # Install specific cuDNN version from the pre-configured repo
     libcudnn8=${CUDNN_VERSION}-1+cuda${CUDA_VERSION_MAJOR_MINOR} \
     libcudnn8-dev=${CUDNN_VERSION}-1+cuda${CUDA_VERSION_MAJOR_MINOR} \
     # --- Cleanup ---
