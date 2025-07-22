@@ -41,7 +41,7 @@ PINNED_PACKAGES = {
 PIP_INDEX_URL = "https://pypi.tuna.tsinghua.edu.cn/simple"
 
 # PyTorch专用下载源
-TORCH_INDEX_URL = "https://download.pytorch.org/whl/cu124"
+TORCH_INDEX_URL = "https://download.pytorch.org/whl/cu121"
 
 def run_pip(args):
     """运行pip命令并处理输出。"""

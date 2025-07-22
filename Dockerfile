@@ -1,5 +1,5 @@
 ARG PYTHON_VERSION=3.11
-ARG CUDA_VERSION=12.4.1
+ARG CUDA_VERSION=12.3.2
 FROM nvidia/cuda:${CUDA_VERSION}-devel-ubuntu22.04
 
 # Set non-interactive installation
@@ -37,9 +37,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     liblapack-dev \
     libx11-dev \
     libgtk-3-dev \
-    # Install specific cuDNN version from the pre-configured repo
-    libcudnn8=${CUDNN_VERSION}-1+cuda${CUDA_VERSION_MAJOR_MINOR} \
-    libcudnn8-dev=${CUDNN_VERSION}-1+cuda${CUDA_VERSION_MAJOR_MINOR} \
+    # The devel image already contains the correct cuDNN version (cuDNN 9 for CUDA 12.4).
+    # The verify_dependencies.py script installs a matching PyTorch version.
+    # Therefore, manual installation of libcudnn8 is unnecessary and incorrect.
     # --- Cleanup ---
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
