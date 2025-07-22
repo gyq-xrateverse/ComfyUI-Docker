@@ -71,7 +71,8 @@ REQUIREMENTS_SOURCES = [
     "https://github.com/kijai/ComfyUI-3D-Pack/raw/main/requirements.txt",
     "https://github.com/kijai/ComfyUI-SUPIR/raw/main/requirements.txt",
     "https://github.com/kijai/ComfyUI-GIMM-VFI/raw/main/requirements.txt",
-    "https://github.com/EvilBT/ComfyUI_SLK_joy_caption_two/raw/main/requirements.txt"
+    "https://github.com/EvilBT/ComfyUI_SLK_joy_caption_two/raw/main/requirements.txt",
+    "https://github.com/ShmuelRonen/ComfyUI-LatentSyncWrapper/raw/main/requirements.txt"
 ]
 
 # 基础软件包，必须固定到特定版本。
