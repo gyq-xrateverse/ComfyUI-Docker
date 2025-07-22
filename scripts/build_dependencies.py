@@ -100,11 +100,12 @@ PINNED_PACKAGES = {
     "torch": "2.6.0",
     "torchvision": "0.21.0",
     "torchaudio": "2.6.0",
-    "xformers": "0.0.29.post3"
+    "xformers": "0.0.29.post3",
+    "numpy": "1.26.4"
 }
 
 # PyTorch专用下载源
-TORCH_INDEX_URL = "https://download.pytorch.org/whl/cu124"
+TORCH_INDEX_URL = "https://download.pytorch.org/whl/cu121"
 
 class DependencyInstaller:
     """协调依赖项的获取、解决和安装。"""

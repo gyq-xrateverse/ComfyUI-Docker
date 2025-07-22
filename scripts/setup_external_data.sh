@@ -38,20 +38,36 @@ setup_symlink() {
     echo "软连接已创建: $target_dir -> $source_dir"
 }
 
+# --- 默认值设置 ---
+# 如果环境变量未设置，将使用以下值。您可以在此更改默认行为。
+# 要覆盖这些设置，请在 `docker run` 中使用 `-e` 标志或在 `docker-compose.yml` 中设置 environment。
+SKIP_MODELS_SYMLINK=${SKIP_MODELS_SYMLINK:-false}
+SKIP_CUSTOM_NODES_SYMLINK=${SKIP_CUSTOM_NODES_SYMLINK:-true}
+
 # 检查并设置models目录
-if is_dir_not_empty "/root/data/models"; then
-    echo "发现外部models目录且不为空: /root/data/models"
-    setup_symlink "/root/data/models" "/app/models"
+if [ "$SKIP_MODELS_SYMLINK" = "true" ]; then
+    echo "通过环境变量SKIP_MODELS_SYMLINK跳过models目录的软连接设置。"
+    echo "将使用默认目录: /app/models"
 else
-    echo "外部models目录未找到或为空，使用默认目录: /app/models"
+    if is_dir_not_empty "/root/data/models"; then
+        echo "发现外部models目录且不为空: /root/data/models"
+        setup_symlink "/root/data/models" "/app/models"
+    else
+        echo "外部models目录未找到或为空，使用默认目录: /app/models"
+    fi
 fi
 
-# 检查并设置custom_nodes目录  
-if is_dir_not_empty "/root/data/custom_nodes"; then
-    echo "发现外部custom_nodes目录且不为空: /root/data/custom_nodes"
-    setup_symlink "/root/data/custom_nodes" "/app/custom_nodes"
+# 检查并设置custom_nodes目录
+if [ "$SKIP_CUSTOM_NODES_SYMLINK" = "true" ]; then
+    echo "通过环境变量SKIP_CUSTOM_NODES_SYMLINK跳过custom_nodes目录的软连接设置。"
+    echo "将使用默认目录: /app/custom_nodes"
 else
-    echo "外部custom_nodes目录未找到或为空，使用默认目录: /app/custom_nodes"
+    if is_dir_not_empty "/root/data/custom_nodes"; then
+        echo "发现外部custom_nodes目录且不为空: /root/data/custom_nodes"
+        setup_symlink "/root/data/custom_nodes" "/app/custom_nodes"
+    else
+        echo "外部custom_nodes目录未找到或为空，使用默认目录: /app/custom_nodes"
+    fi
 fi
 
 echo "外部数据目录设置完成。" 

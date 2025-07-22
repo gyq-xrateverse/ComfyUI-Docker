@@ -44,7 +44,8 @@ PINNED_PACKAGES = {
     "torch": "2.6.0",
     "torchvision": "0.21.0",
     "torchaudio": "2.6.0",
-    "xformers": "0.0.29.post3"
+    "xformers": "0.0.29.post3",
+    "numpy": "1.26.4"
 }
 
 # PyPI 镜像源
