@@ -37,6 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     liblapack-dev \
     libx11-dev \
     libgtk-3-dev \
+    unzip \
     # The devel image already contains the correct cuDNN version (cuDNN 9 for CUDA 12.4).
     # The verify_dependencies.py script installs a matching PyTorch version.
     # Therefore, manual installation of libcudnn8 is unnecessary and incorrect.
@@ -71,18 +72,18 @@ RUN git clone --depth=1 https://github.com/comfyanonymous/ComfyUI.git /app && \
 # --- 方式一：在线安装 (默认) ---
 # 在构建时直接从 GitHub 克隆节点。
 # 这是默认选项，推荐大多数用户使用。
-# COPY scripts/install_custom_nodes.sh /app/scripts/
-# RUN chmod +x /app/scripts/install_custom_nodes.sh && \
-#     /app/scripts/install_custom_nodes.sh
+COPY scripts/install_custom_nodes.sh /app/scripts/
+RUN chmod +x /app/scripts/install_custom_nodes.sh && \
+    /app/scripts/install_custom_nodes.sh
 
 # --- 方式二：本地安装 ---
-# 使用你预先下载到本地 `custom_nodes` 目录中的节点。
+# 使用你预先打包好的 `custom_nodes.zip` 文件。
 # 要使用此方式，请取消注释以下三行，并注释掉上面的“方式一”。
-# 在构建前，请确保你本地的 `custom_nodes` 目录已包含所有需要的节点。
-COPY custom_nodes /app/custom_nodes_src
-COPY scripts/install_custom_nodes_local.sh /app/scripts/
-RUN chmod +x /app/scripts/install_custom_nodes_local.sh && \
-    /app/scripts/install_custom_nodes_local.sh
+# 在构建前，请确保项目根目录下已有名为 `custom_nodes.zip` 的压缩文件。
+# COPY custom_nodes.zip /app/custom_nodes.zip
+# COPY scripts/install_custom_nodes_local.sh /app/scripts/
+# RUN chmod +x /app/scripts/install_custom_nodes_local.sh && \
+#     /app/scripts/install_custom_nodes_local.sh
 
 
 # --- 安装后操作 (对两种方式都适用) ---
