@@ -64,11 +64,29 @@ WORKDIR /app
 RUN git clone --depth=1 https://github.com/comfyanonymous/ComfyUI.git /app && \
     rm -rf /app/.git
 
-# Clone required custom nodes using the robust script
-COPY scripts/install_custom_nodes.sh /app/scripts/
-RUN chmod +x /app/scripts/install_custom_nodes.sh && \
-    /app/scripts/install_custom_nodes.sh && \
-    find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true && \
+# --- 自定义节点安装 ---
+# 请从以下两种方式中选择一种来安装自定义节点。
+# 将你不使用的那种方式注释掉。
+
+# --- 方式一：在线安装 (默认) ---
+# 在构建时直接从 GitHub 克隆节点。
+# 这是默认选项，推荐大多数用户使用。
+# COPY scripts/install_custom_nodes.sh /app/scripts/
+# RUN chmod +x /app/scripts/install_custom_nodes.sh && \
+#     /app/scripts/install_custom_nodes.sh
+
+# --- 方式二：本地安装 ---
+# 使用你预先下载到本地 `custom_nodes` 目录中的节点。
+# 要使用此方式，请取消注释以下三行，并注释掉上面的“方式一”。
+# 在构建前，请确保你本地的 `custom_nodes` 目录已包含所有需要的节点。
+COPY custom_nodes /app/custom_nodes_src
+COPY scripts/install_custom_nodes_local.sh /app/scripts/
+RUN chmod +x /app/scripts/install_custom_nodes_local.sh && \
+    /app/scripts/install_custom_nodes_local.sh
+
+
+# --- 安装后操作 (对两种方式都适用) ---
+RUN find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "go" -exec chmod +x {} \; 2>/dev/null || true && \
     find /app/custom_nodes -path "*/bin/*" -type f -exec chmod +x {} \; 2>/dev/null || true && \

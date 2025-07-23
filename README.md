@@ -106,7 +106,6 @@ docker run -d \
 *   ComfyUI-Inpaint-CropAndStitch
 *   comfyui-easyapi-nodes
 *   ComfyUI-Apt_Preset
-*   ComfyUI-MingNodes
 *   ComfyUI-FluxTrainer
 *   comfyui-supir
 *   ComfyUI-3D-Pack
