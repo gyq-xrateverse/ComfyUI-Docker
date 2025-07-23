@@ -64,52 +64,10 @@ WORKDIR /app
 RUN git clone --depth=1 https://github.com/comfyanonymous/ComfyUI.git /app && \
     rm -rf /app/.git
 
-# Clone required custom nodes (optimized for space)
-RUN mkdir -p /app/custom_nodes && \
-    cd /app/custom_nodes && \
-    git clone --depth=1 https://github.com/Comfy-Org/ComfyUI-Manager.git && \
-    git clone --depth=1 https://github.com/kijai/ComfyUI-WanVideoWrapper.git && \
-    git clone --depth=1 https://github.com/kijai/ComfyUI-KJNodes.git && \
-    git clone --depth=1 https://github.com/cubiq/ComfyUI_essentials.git && \
-    git clone --depth=1 https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git && \
-    git clone --depth=1 https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git && \
-    git clone --depth=1 https://github.com/rgthree/rgthree-comfy.git && \
-    git clone --depth=1 https://github.com/crystian/ComfyUI-Crystools.git && \
-    git clone --depth=1 https://github.com/cubiq/ComfyUI_FaceAnalysis.git && \
-    git clone --depth=1 https://github.com/cubiq/ComfyUI_InstantID.git && \
-    git clone --depth=1 https://github.com/cubiq/PuLID_ComfyUI.git && \
-    git clone --depth=1 https://github.com/Fannovel16/comfyui_controlnet_aux.git && \
-    git clone --depth=1 https://github.com/Fannovel16/ComfyUI-Frame-Interpolation.git && \
-    git clone --depth=1 https://github.com/FizzleDorf/ComfyUI_FizzNodes.git && \
-    git clone --depth=1 https://github.com/Gourieff/ComfyUI-ReActor.git && \
-    git clone --depth=1 https://github.com/huchenlei/ComfyUI-layerdiffuse.git && \
-    git clone --depth=1 https://github.com/jags111/efficiency-nodes-comfyui.git && \
-    git clone --depth=1 https://github.com/ltdrdata/ComfyUI-Impact-Pack.git && \
-    git clone --depth=1 https://github.com/ltdrdata/ComfyUI-Impact-Subpack.git && \
-    git clone --depth=1 https://github.com/ltdrdata/ComfyUI-Inspire-Pack.git && \
-    git clone --depth=1 https://github.com/melMass/comfy_mtb.git && \
-    git clone --depth=1 https://github.com/storyicon/comfyui_segment_anything.git && \
-    git clone --depth=1 https://github.com/WASasquatch/was-node-suite-comfyui.git && \
-    git clone --depth=1 https://github.com/chflame163/ComfyUI_LayerStyle.git && \
-    git clone --depth=1 https://github.com/chflame163/ComfyUI_LayerStyle_Advance.git && \
-    git clone --depth=1 https://github.com/shadowcz007/comfyui-mixlab-nodes.git && \
-    git clone --depth=1 https://github.com/yolain/ComfyUI-Easy-Use.git && \
-    git clone --depth=1 https://github.com/kijai/ComfyUI-IC-Light.git && \
-    git clone --depth=1 https://github.com/siliconflow/BizyAir.git && \
-    git clone --depth=1 https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch.git && \
-    git clone --depth=1 https://github.com/lldacing/comfyui-easyapi-nodes.git && \
-    git clone --depth=1 https://github.com/MinusZoneAI/ComfyUI-MingNodes.git && \
-    git clone --depth=1 https://github.com/kijai/ComfyUI-FluxTrainer.git && \
-    git clone --depth=1 https://github.com/kealiu/comfyui-supir.git && \
-    git clone --depth=1 https://github.com/kijai/ComfyUI-3D-Pack.git && \
-    git clone --depth=1 https://github.com/AlexanderDzhoganov/comfyui-dream-video-batches.git && \
-    git clone --depth=1 https://github.com/Phando/ComfyUI-nunchaku.git && \
-    git clone --depth=1 https://github.com/Dontdrunk/ComfyUI-DD-Translation.git && \
-    git clone --depth=1 https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet.git && \
-    git clone --depth=1 https://github.com/TTPlanetPig/Comfyui_TTP_Toolset.git && \
-    git clone --depth=1 https://github.com/ZenAI-Vietnam/ComfyUI-Kontext-Inpainting.git && \
-    git clone --depth=1 https://github.com/EvilBT/ComfyUI_SLK_joy_caption_two.git && \
-    git clone --depth=1 https://github.com/ShmuelRonen/ComfyUI-LatentSyncWrapper.git && \
+# Clone required custom nodes using the robust script
+COPY scripts/install_custom_nodes.sh /app/scripts/
+RUN chmod +x /app/scripts/install_custom_nodes.sh && \
+    /app/scripts/install_custom_nodes.sh && \
     find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "go" -exec chmod +x {} \; 2>/dev/null || true && \

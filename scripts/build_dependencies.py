@@ -5,7 +5,7 @@
 一个统一的脚本，用于管理和安装ComfyUI项目的所有Python依赖项。
 
 该脚本整合了以下逻辑：
-1. 从所有源获取依赖需求。
+1. 从本地文件系统扫描所有`requirements.txt`文件。
 2. 使用直接的、基于优先级的策略解决版本冲突。
 3. 在一个统一的过程中安装所有软件包。
 
@@ -16,7 +16,8 @@
 import sys
 import subprocess
 import logging
-import urllib.request
+import os
+import glob
 from collections import defaultdict
 from packaging.requirements import Requirement
 from packaging.version import parse as parse_version
@@ -32,49 +33,7 @@ LOGGER = logging.getLogger(__name__)
 
 # --- 配置 ---
 
-# 将从这些源收集所有需求
-REQUIREMENTS_SOURCES = [
-"https://github.com/comfyanonymous/ComfyUI/raw/master/requirements.txt",
-    "https://github.com/crystian/ComfyUI-Crystools/raw/main/requirements.txt",
-    "https://github.com/cubiq/ComfyUI_essentials/raw/main/requirements.txt",
-    "https://github.com/cubiq/ComfyUI_FaceAnalysis/raw/main/requirements.txt",
-    "https://github.com/cubiq/ComfyUI_InstantID/raw/main/requirements.txt",
-    "https://github.com/cubiq/PuLID_ComfyUI/raw/main/requirements.txt",
-    "https://github.com/Fannovel16/comfyui_controlnet_aux/raw/main/requirements.txt",
-    "https://github.com/Fannovel16/ComfyUI-Frame-Interpolation/raw/main/requirements-no-cupy.txt",
-    "https://github.com/FizzleDorf/ComfyUI_FizzNodes/raw/main/requirements.txt",
-    "https://github.com/Gourieff/ComfyUI-ReActor/raw/main/requirements.txt",
-    "https://github.com/huchenlei/ComfyUI-layerdiffuse/raw/main/requirements.txt",
-    "https://github.com/jags111/efficiency-nodes-comfyui/raw/main/requirements.txt",
-    "https://github.com/kijai/ComfyUI-KJNodes/raw/main/requirements.txt",
-    "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite/raw/main/requirements.txt",
-    "https://github.com/ltdrdata/ComfyUI-Impact-Pack/raw/Main/requirements.txt",
-    "https://github.com/ltdrdata/ComfyUI-Impact-Subpack/raw/main/requirements.txt",
-    "https://github.com/ltdrdata/ComfyUI-Inspire-Pack/raw/main/requirements.txt",
-    "https://github.com/ltdrdata/ComfyUI-Manager/raw/main/requirements.txt",
-    "https://github.com/melMass/comfy_mtb/raw/main/requirements.txt",
-    "https://github.com/storyicon/comfyui_segment_anything/raw/main/requirements.txt",
-    "https://github.com/WASasquatch/was-node-suite-comfyui/raw/main/requirements.txt",
-    "https://github.com/kijai/ComfyUI-WanVideoWrapper/raw/main/requirements.txt",
-    "https://github.com/chflame163/ComfyUI_LayerStyle/raw/main/requirements.txt",
-    "https://github.com/chflame163/ComfyUI_LayerStyle_Advance/raw/main/requirements.txt",
-    "https://github.com/shadowcz007/comfyui-mixlab-nodes/raw/main/requirements.txt",
-    "https://github.com/yolain/ComfyUI-Easy-Use/raw/main/requirements.txt",
-    "https://github.com/kijai/ComfyUI-IC-Light/raw/main/requirements.txt",
-    "https://github.com/siliconflow/BizyAir/raw/master/requirements.txt",
-    "https://github.com/lldacing/comfyui-easyapi-nodes/raw/master/requirements.txt",
-    # 新增的自定义节点 requirements
-    "https://github.com/cardenluo/ComfyUI-Apt_Preset/raw/main/requirements.txt",
-    "https://github.com/MinusZoneAI/ComfyUI-MingNodes/raw/main/requirements.txt",
-    "https://github.com/kijai/ComfyUI-FluxTrainer/raw/main/requirements.txt",
-    "https://github.com/Phando/ComfyUI-nunchaku/raw/main/requirements.txt",
-    "https://github.com/AlexanderDzhoganov/comfyui-dream-video-batches/raw/main/requirements.txt",
-    "https://github.com/kijai/ComfyUI-3D-Pack/raw/main/requirements.txt",
-    "https://github.com/kijai/ComfyUI-SUPIR/raw/main/requirements.txt",
-    "https://github.com/kijai/ComfyUI-GIMM-VFI/raw/main/requirements.txt",
-    "https://github.com/EvilBT/ComfyUI_SLK_joy_caption_two/raw/main/requirements.txt",
-    "https://github.com/ShmuelRonen/ComfyUI-LatentSyncWrapper/raw/main/requirements.txt"
-]
+# REQUIREMENTS_SOURCES 列表不再需要，依赖将从本地文件系统发现。
 
 # 手动添加的软件包，用于解决依赖获取失败或未在requirements.txt中声明的问题
 MANUAL_PACKAGES = [
@@ -121,6 +80,7 @@ class DependencyInstaller:
         self._install_build_tools()
         self._gather_requirements()
         self._resolve_versions()
+        self._write_resolved_requirements_file()
         self._install_packages()
         LOGGER.info("统一的依赖安装流程完成。")
 
@@ -131,12 +91,32 @@ class DependencyInstaller:
         self._run_pip(["install", "setuptools<68", "wheel<0.41"])
 
     def _gather_requirements(self):
-        """从配置的源获取所有依赖需求。"""
-        LOGGER.info(f"从 {len(REQUIREMENTS_SOURCES)} 个源收集依赖...")
-        for url in REQUIREMENTS_SOURCES:
+        """从本地文件系统扫描并收集所有依赖需求。"""
+        custom_nodes_dir = "/app/custom_nodes"
+        LOGGER.info(f"在 /app 和 {custom_nodes_dir} 中扫描 'requirements*.txt' 文件...")
+
+        # 首先处理ComfyUI主依赖文件
+        req_files = ["/app/requirements.txt"]
+
+        # 查找custom_nodes中的所有依赖文件
+        pattern = os.path.join(custom_nodes_dir, "**/requirements*.txt")
+        custom_node_reqs = glob.glob(pattern, recursive=True)
+        req_files.extend(custom_node_reqs)
+
+        # 过滤掉不存在的文件路径，以防万一
+        req_files = [f for f in req_files if os.path.exists(f)]
+
+        if not req_files:
+            LOGGER.warning("未找到任何 requirements 文件。")
+            return
+
+        LOGGER.info(f"找到 {len(req_files)} 个需求文件: {req_files}")
+
+        for file_path in req_files:
             try:
-                with urllib.request.urlopen(url, timeout=20) as response:
-                    content = response.read().decode('utf-8')
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    LOGGER.info(f"正在处理: {file_path}")
                     for line in content.splitlines():
                         req_str = line.strip()
                         if not req_str or req_str.startswith('#') or req_str.startswith('-'):
@@ -145,11 +125,35 @@ class DependencyInstaller:
                             req = Requirement(req_str)
                             self.requirements[req.name.lower()].append(req)
                         except Exception as e:
-                            LOGGER.warning(f"无法解析依赖: '{req_str}'. 错误: {e}")
+                            LOGGER.warning(f"无法解析 '{file_path}' 中的依赖: '{req_str}'. 错误: {e}")
             except Exception as e:
-                LOGGER.error(f"获取失败 {url}. 错误: {e}")
-        
+                LOGGER.error(f"读取文件失败: {file_path}. 错误: {e}")
+
         LOGGER.info(f"共收集到 {len(self.requirements)} 个唯一的软件包。")
+
+    def _write_resolved_requirements_file(self):
+        """将解析后的依赖项写入一个最终的requirements.txt文件以供记录。"""
+        output_path = "/app/final_requirements.txt"
+        LOGGER.info(f"正在将最终的依赖计划写入: {output_path}")
+
+        try:
+            # 按包名排序以获得一致的输出
+            sorted_packages = sorted(self.resolved_versions.keys())
+            
+            with open(output_path, 'w', encoding='utf-8') as f:
+                f.write("# This file is auto-generated by build_dependencies.py\n")
+                f.write("# It contains the final, resolved versions of all dependencies for this build.\n\n")
+                for name in sorted_packages:
+                    version = self.resolved_versions[name]
+                    if version:
+                        f.write(f"{name}=={version}\n")
+                    else:
+                        # 如果没有指定版本，则只写入包名
+                        f.write(f"{name}\n")
+            
+            LOGGER.info(f"最终的依赖计划已成功写入 {output_path}")
+        except Exception as e:
+            LOGGER.error(f"写入最终需求文件失败: {output_path}. 错误: {e}")
 
     def _resolve_versions(self):
         """解决版本冲突，并为每个包确定最终版本。"""
