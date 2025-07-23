@@ -46,6 +46,7 @@ set "REPOS[39]=https://github.com/ZenAI-Vietnam/ComfyUI-Kontext-Inpainting.git"
 set "REPOS[40]=https://github.com/EvilBT/ComfyUI_SLK_joy_caption_two.git"
 set "REPOS[41]=https://github.com/ShmuelRonen/ComfyUI-LatentSyncWrapper.git"
 set "REPOS[42]=https://github.com/mingsky-ai/ComfyUI-MingNodes.git"
+set "REPOS[43]=https://github.com/christian-byrne/audio-separation-nodes-comfyui.git"
 
 :: 克隆所有仓库到当前目录
 for /L %%i in (0,1,42) do (
