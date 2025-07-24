@@ -49,6 +49,7 @@ REPOS=(
     "https://github.com/christian-byrne/audio-separation-nodes-comfyui.git"
     "https://github.com/AIFSH/ComfyUI-GPT_SoVITS.git"
     "https://github.com/niknah/ComfyUI-F5-TTS.git"
+    "https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git"
 )
 
 TARGET_DIR="/app/custom_nodes"

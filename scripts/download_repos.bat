@@ -49,6 +49,7 @@ set "REPOS[42]=https://github.com/mingsky-ai/ComfyUI-MingNodes.git"
 set "REPOS[43]=https://github.com/christian-byrne/audio-separation-nodes-comfyui.git"
 set "REPOS[44]=https://github.com/AIFSH/ComfyUI-GPT_SoVITS.git"
 set "REPOS[45]=https://github.com/niknah/ComfyUI-F5-TTS.git"
+set "REPOS[46]=https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git"
 
 :: 克隆所有仓库到当前目录
 for /L %%i in (0,1,42) do (
