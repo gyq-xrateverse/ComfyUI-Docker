@@ -47,6 +47,8 @@ REPOS=(
     "https://github.com/ShmuelRonen/ComfyUI-LatentSyncWrapper.git"
     "https://github.com/mingsky-ai/ComfyUI-MingNodes.git"
     "https://github.com/christian-byrne/audio-separation-nodes-comfyui.git"
+    "https://github.com/AIFSH/ComfyUI-GPT_SoVITS.git"
+    "https://github.com/niknah/ComfyUI-F5-TTS.git"
 )
 
 TARGET_DIR="/app/custom_nodes"
