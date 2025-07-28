@@ -125,7 +125,7 @@ RUN chmod +x /app/entrypoint.sh && \
 ENTRYPOINT ["/app/entrypoint.sh"]
 
 # Default port
-EXPOSE 10001
+EXPOSE 10001 22
 
 # Command
 CMD ["python", "main.py", "--listen", "0.0.0.0", "--port", "10001", "--enable-cors-header"]
