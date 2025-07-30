@@ -6,21 +6,11 @@ JSON_CONFIG="/app/custom_nodes.json"
 if [ -f "$JSON_CONFIG" ]; then
     echo "使用JSON配置文件: $JSON_CONFIG"
     
-    # 从JSON配置读取设置
-    TARGET_DIR=$(jq -r '.target_directory // "/app/custom_nodes"' "$JSON_CONFIG")
-    MAX_RETRIES=$(jq -r '.installation_settings.max_retries // 3' "$JSON_CONFIG")
-    RETRY_DELAY=$(jq -r '.installation_settings.retry_delay // 5' "$JSON_CONFIG")
-    
-    # 提取启用的节点URL到数组
-    mapfile -t REPOS < <(jq -r '.nodes[] | select(.enabled == true) | .url' "$JSON_CONFIG" | sort -k1,1)
+    # 从JSON数组读取URL
+    mapfile -t REPOS < <(jq -r '.[]' "$JSON_CONFIG")
     
 else
     echo "未找到JSON配置文件，使用默认配置"
-    
-    # 默认配置（向后兼容）
-    TARGET_DIR="/app/custom_nodes"
-    MAX_RETRIES=3
-    RETRY_DELAY=5 # in seconds
     
     # List of custom node git repositories（保持原有节点列表作为后备）
     REPOS=(
@@ -28,8 +18,11 @@ else
     )
 fi
 
-echo "将在目录中安装 ${#REPOS[@]} 个自定义节点: $TARGET_DIR"
-echo "配置: MAX_RETRIES=$MAX_RETRIES, RETRY_DELAY=${RETRY_DELAY}s"
+TARGET_DIR="/app/custom_nodes"
+MAX_RETRIES=3
+RETRY_DELAY=5
+
+echo "将安装 ${#REPOS[@]} 个自定义节点到目录: $TARGET_DIR"
 
 # Ensure the target directory exists
 mkdir -p "$TARGET_DIR"

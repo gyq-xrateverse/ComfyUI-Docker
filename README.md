@@ -70,87 +70,48 @@ docker run -d \
 *   `/app/user`: 用于存放用户相关的配置文件或数据。
 *   `/app/temp`: 临时文件目录。
 
-## 🧩 自定义节点管理
+## 🧩 自定义节点配置
 
-本项目采用统一的JSON配置文件管理自定义节点，提供了灵活的节点配置和管理方案。
+本项目采用统一的JSON配置文件管理自定义节点，简化节点管理流程。
 
-### 配置文件
+### 配置文件格式
 
-**主配置文件**: `custom_nodes.json`
+**配置文件**: `custom_nodes.json`
 
 ```json
-{
-  "version": "1.0.0",
-  "description": "ComfyUI Docker 统一自定义节点配置", 
-  "target_directory": "/app/custom_nodes",
-  "installation_settings": {
-    "max_retries": 3,
-    "retry_delay": 5,
-    "clone_depth": 1
-  },
-  "nodes": [
-    {
-      "name": "ComfyUI-Manager",
-      "url": "https://github.com/Comfy-Org/ComfyUI-Manager.git",
-      "description": "ComfyUI扩展管理器",
-      "category": "core", 
-      "priority": 1,
-      "enabled": true
-    }
-  ]
-}
+[
+  "https://github.com/Comfy-Org/ComfyUI-Manager.git",
+  "https://github.com/kijai/ComfyUI-WanVideoWrapper.git", 
+  "https://github.com/kijai/ComfyUI-KJNodes.git",
+  "https://github.com/cubiq/ComfyUI_essentials.git"
+]
 ```
 
-### 节点管理工具
+### 使用方法
 
-使用Python管理工具进行节点操作：
+1. **自动检测**: 安装脚本会自动检测并使用JSON配置文件
+2. **编辑配置**: 直接编辑`custom_nodes.json`文件添加或删除节点URL
+3. **向后兼容**: 如未找到JSON文件，使用内置的默认节点列表
 
-```bash
-# 查看所有节点
-python scripts/manage_nodes.py list
+### 预装节点
 
-# 按分类查看节点
-python scripts/manage_nodes.py list --category core
+本镜像预装了46个常用自定义节点，包括：
 
-# 仅查看启用的节点
-python scripts/manage_nodes.py list --enabled-only
+- **ComfyUI-Manager** - 核心扩展管理器
+- **ComfyUI_essentials** - 基础工具集  
+- **ComfyUI-VideoHelperSuite** - 视频处理工具
+- **ComfyUI_FaceAnalysis** - 人脸分析工具
+- **comfyui_controlnet_aux** - ControlNet辅助工具
+- **ComfyUI-Impact-Pack** - Impact工具包
+- **was-node-suite-comfyui** - WAS节点套件
+- 以及更多专业节点...
 
-# 添加新节点
-python scripts/manage_nodes.py add "节点名称" "https://github.com/用户/仓库.git" "节点描述" --category utility
+### 系统特性
 
-# 禁用/启用节点
-python scripts/manage_nodes.py toggle "节点名称"
-
-# 删除节点
-python scripts/manage_nodes.py remove "节点名称"
-
-# 验证配置文件
-python scripts/manage_nodes.py validate
-
-# 查看所有分类
-python scripts/manage_nodes.py categories
-```
-
-### 预装节点分类
-
-| 分类 | 说明 | 主要节点 |
-|------|------|----------|
-| **core** | 核心管理工具 | ComfyUI-Manager |
-| **utility** | 通用工具类 | ComfyUI_essentials, rgthree-comfy, was-node-suite-comfyui |
-| **video** | 视频处理 | ComfyUI-VideoHelperSuite, ComfyUI-Frame-Interpolation |
-| **face** | 人脸相关 | ComfyUI_FaceAnalysis, ComfyUI_InstantID, ComfyUI-ReActor |
-| **controlnet** | 控制网络 | comfyui_controlnet_aux |
-| **style** | 样式处理 | ComfyUI_LayerStyle, ComfyUI_LayerStyle_Advance |
-| **audio** | 音频处理 | audio-separation-nodes-comfyui, ComfyUI-F5-TTS |
-| **3d** | 3D处理 | ComfyUI-3D-Pack |
-| **training** | 模型训练 | ComfyUI-FluxTrainer |
-| **upscale** | 超分辨率 | ComfyUI-SUPIR |
-
-### 配置兼容性
-
-- ✅ **自动检测**: 系统会自动检测JSON配置文件
-- ✅ **向后兼容**: 如未找到JSON文件，使用默认配置
-- ✅ **跨平台**: 支持Linux (bash) 和Windows (batch + PowerShell)
+- ✅ **全局共享**: 统一的JSON配置文件
+- ✅ **简单易用**: 纯URL数组格式，无复杂结构  
+- ✅ **跨平台**: 支持Linux和Windows
+- ✅ **向后兼容**: 无配置文件时使用默认列表
 
 ## 🛠️ 技术栈
 

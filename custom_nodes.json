@@ -1,381 +1,48 @@
-{
-  "version": "1.0.0",
-  "last_updated": "2025-01-15",
-  "description": "ComfyUI Docker 统一自定义节点配置",
-  "target_directory": "/app/custom_nodes",
-  "installation_settings": {
-    "max_retries": 3,
-    "retry_delay": 5,
-    "clone_depth": 1
-  },
-  "nodes": [
-    {
-      "name": "ComfyUI-Manager",
-      "url": "https://github.com/Comfy-Org/ComfyUI-Manager.git",
-      "description": "ComfyUI扩展管理器，提供节点安装、移除、禁用和启用功能",
-      "category": "core",
-      "priority": 1,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-WanVideoWrapper",
-      "url": "https://github.com/kijai/ComfyUI-WanVideoWrapper.git",
-      "description": "视频处理包装器",
-      "category": "video",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-KJNodes",
-      "url": "https://github.com/kijai/ComfyUI-KJNodes.git",
-      "description": "KJ系列自定义节点",
-      "category": "utility",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI_essentials",
-      "url": "https://github.com/cubiq/ComfyUI_essentials.git",
-      "description": "ComfyUI基础工具集",
-      "category": "utility",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-VideoHelperSuite",
-      "url": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git",
-      "description": "视频处理辅助工具套件",
-      "category": "video",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI_Comfyroll_CustomNodes",
-      "url": "https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git",
-      "description": "Comfyroll自定义节点集合",
-      "category": "utility",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "rgthree-comfy",
-      "url": "https://github.com/rgthree/rgthree-comfy.git",
-      "description": "rgthree工具节点",
-      "category": "utility",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-Crystools",
-      "url": "https://github.com/crystian/ComfyUI-Crystools.git",
-      "description": "Crystal工具集",
-      "category": "utility",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI_FaceAnalysis",
-      "url": "https://github.com/cubiq/ComfyUI_FaceAnalysis.git",
-      "description": "人脸分析工具",
-      "category": "face",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI_InstantID",
-      "url": "https://github.com/cubiq/ComfyUI_InstantID.git",
-      "description": "InstantID人脸识别",
-      "category": "face",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "PuLID_ComfyUI",
-      "url": "https://github.com/cubiq/PuLID_ComfyUI.git",
-      "description": "PuLID身份识别",
-      "category": "face",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "comfyui_controlnet_aux",
-      "url": "https://github.com/Fannovel16/comfyui_controlnet_aux.git",
-      "description": "ControlNet辅助工具",
-      "category": "controlnet",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-Frame-Interpolation",
-      "url": "https://github.com/Fannovel16/ComfyUI-Frame-Interpolation.git",
-      "description": "帧插值处理",
-      "category": "video",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI_FizzNodes",
-      "url": "https://github.com/FizzleDorf/ComfyUI_FizzNodes.git",
-      "description": "Fizz系列节点",
-      "category": "utility",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-ReActor",
-      "url": "https://github.com/Gourieff/ComfyUI-ReActor.git",
-      "description": "面部替换工具",
-      "category": "face",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-layerdiffuse",
-      "url": "https://github.com/huchenlei/ComfyUI-layerdiffuse.git",
-      "description": "分层扩散处理",
-      "category": "diffusion",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "efficiency-nodes-comfyui",
-      "url": "https://github.com/jags111/efficiency-nodes-comfyui.git",
-      "description": "效率提升节点",
-      "category": "utility",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-Impact-Pack",
-      "url": "https://github.com/ltdrdata/ComfyUI-Impact-Pack.git",
-      "description": "Impact工具包",
-      "category": "utility",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-Impact-Subpack",
-      "url": "https://github.com/ltdrdata/ComfyUI-Impact-Subpack.git",
-      "description": "Impact子工具包",
-      "category": "utility",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-Inspire-Pack",
-      "url": "https://github.com/ltdrdata/ComfyUI-Inspire-Pack.git",
-      "description": "Inspire灵感工具包",
-      "category": "utility",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "comfy_mtb",
-      "url": "https://github.com/melMass/comfy_mtb.git",
-      "description": "MTB工具集",
-      "category": "utility",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "comfyui_segment_anything",
-      "url": "https://github.com/storyicon/comfyui_segment_anything.git",
-      "description": "Segment Anything分割工具",
-      "category": "segmentation",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "was-node-suite-comfyui",
-      "url": "https://github.com/WASasquatch/was-node-suite-comfyui.git",
-      "description": "WAS节点套件",
-      "category": "utility",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI_LayerStyle",
-      "url": "https://github.com/chflame163/ComfyUI_LayerStyle.git",
-      "description": "图层样式处理",
-      "category": "style",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI_LayerStyle_Advance",
-      "url": "https://github.com/chflame163/ComfyUI_LayerStyle_Advance.git",
-      "description": "高级图层样式处理",
-      "category": "style",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "comfyui-mixlab-nodes",
-      "url": "https://github.com/shadowcz007/comfyui-mixlab-nodes.git",
-      "description": "Mixlab节点集合",
-      "category": "utility",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-Easy-Use",
-      "url": "https://github.com/yolain/ComfyUI-Easy-Use.git",
-      "description": "简化使用工具",
-      "category": "utility",
-      "priority": 2,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-IC-Light",
-      "url": "https://github.com/kijai/ComfyUI-IC-Light.git",
-      "description": "IC-Light光照控制",
-      "category": "lighting",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "BizyAir",
-      "url": "https://github.com/siliconflow/BizyAir.git",
-      "description": "BizyAir云端推理",
-      "category": "cloud",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-Inpaint-CropAndStitch",
-      "url": "https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch.git",
-      "description": "修复裁剪拼接工具",
-      "category": "inpainting",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "comfyui-easyapi-nodes",
-      "url": "https://github.com/lldacing/comfyui-easyapi-nodes.git",
-      "description": "EasyAPI节点",
-      "category": "api",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-FluxTrainer",
-      "url": "https://github.com/kijai/ComfyUI-FluxTrainer.git",
-      "description": "Flux模型训练器",
-      "category": "training",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-SUPIR",
-      "url": "https://github.com/kijai/ComfyUI-SUPIR.git",
-      "description": "SUPIR超分辨率",
-      "category": "upscale",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-3D-Pack",
-      "url": "https://github.com/MrForExample/ComfyUI-3D-Pack.git",
-      "description": "3D处理工具包",
-      "category": "3d",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "comfyui-dream-video-batches", 
-      "url": "https://github.com/alt-key-project/comfyui-dream-video-batches.git",
-      "description": "Dream视频批处理",
-      "category": "video",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-nunchaku",
-      "url": "https://github.com/nunchaku-tech/ComfyUI-nunchaku.git",
-      "description": "Nunchaku工具集",
-      "category": "utility",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-DD-Translation",
-      "url": "https://github.com/Dontdrunk/ComfyUI-DD-Translation.git",
-      "description": "DD翻译工具",
-      "category": "translation",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI_Custom_Nodes_AlekPet",
-      "url": "https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet.git",
-      "description": "AlekPet自定义节点集合",
-      "category": "utility",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "Comfyui_TTP_Toolset",
-      "url": "https://github.com/TTPlanetPig/Comfyui_TTP_Toolset.git",
-      "description": "TTP工具集",
-      "category": "utility",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-Kontext-Inpainting",
-      "url": "https://github.com/ZenAI-Vietnam/ComfyUI-Kontext-Inpainting.git",
-      "description": "Kontext修复工具",
-      "category": "inpainting",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI_SLK_joy_caption_two",
-      "url": "https://github.com/EvilBT/ComfyUI_SLK_joy_caption_two.git",
-      "description": "SLK Joy标题生成器V2",
-      "category": "caption",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-LatentSyncWrapper",
-      "url": "https://github.com/ShmuelRonen/ComfyUI-LatentSyncWrapper.git",
-      "description": "潜在空间同步包装器",
-      "category": "utility",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-MingNodes",
-      "url": "https://github.com/mingsky-ai/ComfyUI-MingNodes.git",
-      "description": "Ming节点集合",
-      "category": "utility",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "audio-separation-nodes-comfyui",
-      "url": "https://github.com/christian-byrne/audio-separation-nodes-comfyui.git",
-      "description": "音频分离节点",
-      "category": "audio",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-F5-TTS",
-      "url": "https://github.com/niknah/ComfyUI-F5-TTS.git",
-      "description": "F5语音合成",
-      "category": "audio",
-      "priority": 3,
-      "enabled": true
-    },
-    {
-      "name": "ComfyUI-Custom-Scripts",
-      "url": "https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git",
-      "description": "自定义脚本集合",
-      "category": "utility",
-      "priority": 2,
-      "enabled": true
-    }
-  ]
-} 
+[
+  "https://github.com/Comfy-Org/ComfyUI-Manager.git",
+  "https://github.com/kijai/ComfyUI-WanVideoWrapper.git",
+  "https://github.com/kijai/ComfyUI-KJNodes.git",
+  "https://github.com/cubiq/ComfyUI_essentials.git",
+  "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git",
+  "https://github.com/Suzie1/ComfyUI_Comfyroll_CustomNodes.git",
+  "https://github.com/rgthree/rgthree-comfy.git",
+  "https://github.com/crystian/ComfyUI-Crystools.git",
+  "https://github.com/cubiq/ComfyUI_FaceAnalysis.git",
+  "https://github.com/cubiq/ComfyUI_InstantID.git",
+  "https://github.com/cubiq/PuLID_ComfyUI.git",
+  "https://github.com/Fannovel16/comfyui_controlnet_aux.git",
+  "https://github.com/Fannovel16/ComfyUI-Frame-Interpolation.git",
+  "https://github.com/FizzleDorf/ComfyUI_FizzNodes.git",
+  "https://github.com/Gourieff/ComfyUI-ReActor.git",
+  "https://github.com/huchenlei/ComfyUI-layerdiffuse.git",
+  "https://github.com/jags111/efficiency-nodes-comfyui.git",
+  "https://github.com/ltdrdata/ComfyUI-Impact-Pack.git",
+  "https://github.com/ltdrdata/ComfyUI-Impact-Subpack.git",
+  "https://github.com/ltdrdata/ComfyUI-Inspire-Pack.git",
+  "https://github.com/melMass/comfy_mtb.git",
+  "https://github.com/storyicon/comfyui_segment_anything.git",
+  "https://github.com/WASasquatch/was-node-suite-comfyui.git",
+  "https://github.com/chflame163/ComfyUI_LayerStyle.git",
+  "https://github.com/chflame163/ComfyUI_LayerStyle_Advance.git",
+  "https://github.com/shadowcz007/comfyui-mixlab-nodes.git",
+  "https://github.com/yolain/ComfyUI-Easy-Use.git",
+  "https://github.com/kijai/ComfyUI-IC-Light.git",
+  "https://github.com/siliconflow/BizyAir.git",
+  "https://github.com/lquesada/ComfyUI-Inpaint-CropAndStitch.git",
+  "https://github.com/lldacing/comfyui-easyapi-nodes.git",
+  "https://github.com/kijai/ComfyUI-FluxTrainer.git",
+  "https://github.com/kijai/ComfyUI-SUPIR.git",
+  "https://github.com/MrForExample/ComfyUI-3D-Pack.git",
+  "https://github.com/alt-key-project/comfyui-dream-video-batches.git",
+  "https://github.com/nunchaku-tech/ComfyUI-nunchaku.git",
+  "https://github.com/Dontdrunk/ComfyUI-DD-Translation.git",
+  "https://github.com/AlekPet/ComfyUI_Custom_Nodes_AlekPet.git",
+  "https://github.com/TTPlanetPig/Comfyui_TTP_Toolset.git",
+  "https://github.com/ZenAI-Vietnam/ComfyUI-Kontext-Inpainting.git",
+  "https://github.com/EvilBT/ComfyUI_SLK_joy_caption_two.git",
+  "https://github.com/ShmuelRonen/ComfyUI-LatentSyncWrapper.git",
+  "https://github.com/mingsky-ai/ComfyUI-MingNodes.git",
+  "https://github.com/christian-byrne/audio-separation-nodes-comfyui.git",
+  "https://github.com/niknah/ComfyUI-F5-TTS.git",
+  "https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git"
+] 

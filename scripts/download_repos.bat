@@ -10,14 +10,8 @@ set "JSON_CONFIG=custom_nodes.json"
 if exist "%JSON_CONFIG%" (
     echo 使用JSON配置文件: %JSON_CONFIG%
     
-    :: 使用PowerShell解析JSON配置
-    powershell -Command "$config = Get-Content '%JSON_CONFIG%' | ConvertFrom-Json; $config.nodes | Where-Object {$_.enabled -eq $true} | ForEach-Object {Write-Output $_.url}" > temp_repos.txt
-    
-    :: 设置目标目录（从JSON读取，默认为当前目录）
-    for /f "tokens=*" %%i in ('powershell -Command "$config = Get-Content '%JSON_CONFIG%' | ConvertFrom-Json; Write-Output $config.target_directory"') do set "TARGET_DIR=%%i"
-    if "!TARGET_DIR!"=="null" set "TARGET_DIR=."
-    
-    echo 目标目录: !TARGET_DIR!
+    :: 使用PowerShell解析JSON数组
+    powershell -Command "$config = Get-Content '%JSON_CONFIG%' | ConvertFrom-Json; $config | ForEach-Object {Write-Output $_}" > temp_repos.txt
     
 ) else (
     echo 未找到JSON配置文件，使用默认配置
@@ -26,8 +20,6 @@ if exist "%JSON_CONFIG%" (
     (
         echo https://github.com/Comfy-Org/ComfyUI-Manager.git
     ) > temp_repos.txt
-    
-    set "TARGET_DIR=."
 )
 
 :: 统计仓库数量
@@ -36,14 +28,8 @@ for /f %%i in (temp_repos.txt) do (
     set /a "TOTAL_COUNT+=1"
 )
 
-echo 将安装 !TOTAL_COUNT! 个自定义节点到目录: !TARGET_DIR!
+echo 将安装 !TOTAL_COUNT! 个自定义节点
 echo ================================================
-
-:: 如果目标目录不是当前目录，则创建并切换
-if not "!TARGET_DIR!"=="." (
-    if not exist "!TARGET_DIR!" mkdir "!TARGET_DIR!"
-    cd /d "!TARGET_DIR!"
-)
 
 set /a "SUCCESS_COUNT=0"
 set /a "CURRENT=0"
@@ -93,9 +79,11 @@ if !SUCCESS_COUNT! lss !TOTAL_COUNT! (
 
 echo.
 echo 使用说明:
-echo 1. 要修改节点配置，请编辑 custom_nodes.json 文件
-echo 2. 要管理节点，请使用: python scripts/manage_nodes.py
-echo 3. 支持的操作: add, remove, list, toggle, validate
+echo 要修改节点配置，请编辑 custom_nodes.json 文件
+echo JSON格式为简单的URL数组，例如:
+echo [
+echo   "https://github.com/用户/仓库.git"
+echo ]
 echo.
 
 pause
