@@ -70,52 +70,87 @@ docker run -d \
 *   `/app/user`: 用于存放用户相关的配置文件或数据。
 *   `/app/temp`: 临时文件目录。
 
-## 🧩 预装的自定义节点列表
+## 🧩 自定义节点管理
 
-本镜像预装了以下自定义节点，以提供丰富的功能：
+本项目采用统一的JSON配置文件管理自定义节点，提供了灵活的节点配置和管理方案。
 
-*   ComfyUI-Manager
-*   ComfyUI-WanVideoWrapper
-*   ComfyUI-KJNodes
-*   ComfyUI_essentials
-*   ComfyUI-VideoHelperSuite
-*   ComfyUI_Comfyroll_CustomNodes
-*   rgthree-comfy
-*   ComfyUI-Crystools
-*   ComfyUI_FaceAnalysis
-*   ComfyUI_InstantID
-*   PuLID_ComfyUI
-*   comfyui_controlnet_aux
-*   ComfyUI-Frame-Interpolation
-*   ComfyUI_FizzNodes
-*   ComfyUI-ReActor
-*   ComfyUI-layerdiffuse
-*   efficiency-nodes-comfyui
-*   ComfyUI-Impact-Pack
-*   ComfyUI-Impact-Subpack
-*   ComfyUI-Inspire-Pack
-*   comfy_mtb
-*   comfyui_segment_anything
-*   was-node-suite-comfyui
-*   ComfyUI_LayerStyle
-*   ComfyUI_LayerStyle_Advance
-*   comfyui-mixlab-nodes
-*   ComfyUI-Easy-Use
-*   ComfyUI-IC-Light
-*   BizyAir
-*   ComfyUI-Inpaint-CropAndStitch
-*   comfyui-easyapi-nodes
-*   ComfyUI-Apt_Preset
-*   ComfyUI-FluxTrainer
-*   comfyui-supir
-*   ComfyUI-3D-Pack
-*   comfyui-dream-video-batches
-*   ComfyUI-nunchaku
-*   ComfyUI-DD-Translation
-*   ComfyUI_Custom_Nodes_AlekPet
-*   Comfyui_TTP_Toolset
-*   ComfyUI-Kontext-Inpainting
-*   ...以及更多节点的依赖项。
+### 配置文件
+
+**主配置文件**: `custom_nodes.json`
+
+```json
+{
+  "version": "1.0.0",
+  "description": "ComfyUI Docker 统一自定义节点配置", 
+  "target_directory": "/app/custom_nodes",
+  "installation_settings": {
+    "max_retries": 3,
+    "retry_delay": 5,
+    "clone_depth": 1
+  },
+  "nodes": [
+    {
+      "name": "ComfyUI-Manager",
+      "url": "https://github.com/Comfy-Org/ComfyUI-Manager.git",
+      "description": "ComfyUI扩展管理器",
+      "category": "core", 
+      "priority": 1,
+      "enabled": true
+    }
+  ]
+}
+```
+
+### 节点管理工具
+
+使用Python管理工具进行节点操作：
+
+```bash
+# 查看所有节点
+python scripts/manage_nodes.py list
+
+# 按分类查看节点
+python scripts/manage_nodes.py list --category core
+
+# 仅查看启用的节点
+python scripts/manage_nodes.py list --enabled-only
+
+# 添加新节点
+python scripts/manage_nodes.py add "节点名称" "https://github.com/用户/仓库.git" "节点描述" --category utility
+
+# 禁用/启用节点
+python scripts/manage_nodes.py toggle "节点名称"
+
+# 删除节点
+python scripts/manage_nodes.py remove "节点名称"
+
+# 验证配置文件
+python scripts/manage_nodes.py validate
+
+# 查看所有分类
+python scripts/manage_nodes.py categories
+```
+
+### 预装节点分类
+
+| 分类 | 说明 | 主要节点 |
+|------|------|----------|
+| **core** | 核心管理工具 | ComfyUI-Manager |
+| **utility** | 通用工具类 | ComfyUI_essentials, rgthree-comfy, was-node-suite-comfyui |
+| **video** | 视频处理 | ComfyUI-VideoHelperSuite, ComfyUI-Frame-Interpolation |
+| **face** | 人脸相关 | ComfyUI_FaceAnalysis, ComfyUI_InstantID, ComfyUI-ReActor |
+| **controlnet** | 控制网络 | comfyui_controlnet_aux |
+| **style** | 样式处理 | ComfyUI_LayerStyle, ComfyUI_LayerStyle_Advance |
+| **audio** | 音频处理 | audio-separation-nodes-comfyui, ComfyUI-F5-TTS |
+| **3d** | 3D处理 | ComfyUI-3D-Pack |
+| **training** | 模型训练 | ComfyUI-FluxTrainer |
+| **upscale** | 超分辨率 | ComfyUI-SUPIR |
+
+### 配置兼容性
+
+- ✅ **自动检测**: 系统会自动检测JSON配置文件
+- ✅ **向后兼容**: 如未找到JSON文件，使用默认配置
+- ✅ **跨平台**: 支持Linux (bash) 和Windows (batch + PowerShell)
 
 ## 🛠️ 技术栈
 
