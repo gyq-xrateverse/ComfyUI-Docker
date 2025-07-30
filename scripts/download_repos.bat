@@ -7,8 +7,11 @@ echo ================================================
 
 :: 检查是否存在JSON配置文件
 set "JSON_CONFIG=custom_nodes.json"
+set "USING_JSON=0"
+
 if exist "%JSON_CONFIG%" (
     echo 使用JSON配置文件: %JSON_CONFIG%
+    set "USING_JSON=1"
     
     :: 使用PowerShell解析JSON数组
     powershell -Command "$config = Get-Content '%JSON_CONFIG%' | ConvertFrom-Json; $config | ForEach-Object {Write-Output $_}" > temp_repos.txt
@@ -58,7 +61,7 @@ for /f "tokens=*" %%i in (temp_repos.txt) do (
             echo   ✓ !DIRNAME! 克隆成功
             set /a "SUCCESS_COUNT+=1"
         ) else (
-            echo   ✗ !DIRNAME! 克隆失败
+            echo   ✗ !DIRNAME! 克隆失败，跳过继续处理
         )
     )
     echo.
@@ -71,12 +74,25 @@ echo ================================================
 echo 自定义节点安装完成
 echo 成功: !SUCCESS_COUNT!/!TOTAL_COUNT!
 
+set /a "FAILED_COUNT=!TOTAL_COUNT! - !SUCCESS_COUNT!"
+
 if !SUCCESS_COUNT! lss !TOTAL_COUNT! (
-    echo ⚠ 部分节点安装失败，请检查网络连接或仓库地址
+    echo 警告: 有 !FAILED_COUNT! 个节点安装失败，已跳过
+    
+    :: 仅在使用默认配置（非JSON）且全部失败时才显示错误
+    if !USING_JSON! equ 0 (
+        if !SUCCESS_COUNT! equ 0 (
+            echo 错误: 所有节点都安装失败，请检查网络连接
+            pause
+            exit /b 1
+        )
+    )
 ) else (
     echo ✓ 所有自定义节点已成功安装
 )
 
+echo.
+echo 节点安装流程完成。成功安装了 !SUCCESS_COUNT! 个自定义节点。
 echo.
 echo 使用说明:
 echo 要修改节点配置，请编辑 custom_nodes.json 文件

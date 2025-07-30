@@ -72,6 +72,7 @@ RUN git clone --depth=1 https://github.com/comfyanonymous/ComfyUI.git /app && \
 # --- 方式一：在线安装 (默认) ---
 # 在构建时直接从 GitHub 克隆节点。
 # 这是默认选项，推荐大多数用户使用。
+COPY custom_nodes.json /app/custom_nodes.json
 COPY scripts/install_custom_nodes.sh /app/scripts/
 RUN chmod +x /app/scripts/install_custom_nodes.sh && \
     /app/scripts/install_custom_nodes.sh

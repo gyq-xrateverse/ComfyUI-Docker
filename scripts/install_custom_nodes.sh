@@ -50,15 +50,23 @@ for repo in "${REPOS[@]}"; do
         ((clone_success++))
         echo "✓ $repo_name 克隆成功"
     else
-        echo "✗ $repo_name 克隆失败"
+        echo "✗ $repo_name 克隆失败，跳过继续处理"
     fi
 done
 
 echo "================================================================"
 echo "自定义节点安装完成"
 echo "成功: $clone_success/$clone_total"
+
 if [ $clone_success -lt $clone_total ]; then
-    echo "部分节点安装失败，请检查网络连接或仓库地址"
-    exit 1
+    failed_count=$((clone_total - clone_success))
+    echo "警告: 有 $failed_count 个节点安装失败，已跳过"
+    
+    # 仅在使用默认配置（非JSON）且失败较多时才退出
+    if [ ! -f "$JSON_CONFIG" ] && [ $clone_success -eq 0 ]; then
+        echo "错误: 所有节点都安装失败，请检查网络连接"
+        exit 1
+    fi
 fi
-echo "所有自定义节点已成功克隆。" 
+
+echo "节点安装流程完成。成功安装了 $clone_success 个自定义节点。" 
