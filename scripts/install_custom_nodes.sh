@@ -31,6 +31,9 @@ cd "$TARGET_DIR"
 clone_success=0
 clone_total=${#REPOS[@]}
 
+# 临时禁用错误自动退出，允许git clone重试机制正常工作
+set +e
+
 for repo in "${REPOS[@]}"; do
     repo_name=$(basename "$repo" .git)
     echo "正在克隆 $repo_name..."
@@ -53,6 +56,9 @@ for repo in "${REPOS[@]}"; do
         echo "✗ $repo_name 克隆失败，跳过继续处理"
     fi
 done
+
+# 重新启用错误自动退出
+set -e
 
 echo "================================================================"
 echo "自定义节点安装完成"
