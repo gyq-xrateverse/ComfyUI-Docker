@@ -41,7 +41,8 @@ MANUAL_PACKAGES = [
     "nunchaku",
     "evalidate",
     "pyhocon",
-    "sageattention"
+    "sageattention",
+    "git+https://github.com/huggingface/diffusers"
 ]
 
 # 基础软件包，必须固定到特定版本。

@@ -5,24 +5,37 @@ setlocal enabledelayedexpansion
 echo ComfyUI 自定义节点安装脚本 (Windows版本)
 echo ================================================
 
-:: 检查是否存在JSON配置文件
-set "JSON_CONFIG=custom_nodes.json"
+:: 获取脚本所在目录的上级目录（项目根目录）
+set "SCRIPT_DIR=%~dp0"
+set "PROJECT_ROOT=%SCRIPT_DIR%.."
+
+:: 检查JSON配置文件（多个可能位置）
+set "JSON_CONFIG="
 set "USING_JSON=0"
 
-if exist "%JSON_CONFIG%" (
-    echo 使用JSON配置文件: %JSON_CONFIG%
+:: 优先级1: 项目根目录
+if exist "%PROJECT_ROOT%\custom_nodes.json" (
+    set "JSON_CONFIG=%PROJECT_ROOT%\custom_nodes.json"
     set "USING_JSON=1"
-    
+    echo 使用JSON配置文件: %PROJECT_ROOT%\custom_nodes.json
+) else (
+    :: 优先级2: 当前目录
+    if exist "custom_nodes.json" (
+        set "JSON_CONFIG=custom_nodes.json"
+        set "USING_JSON=1"
+        echo 使用JSON配置文件: custom_nodes.json
+    )
+)
+
+if !USING_JSON! equ 1 (
     :: 使用PowerShell解析JSON数组
-    powershell -Command "$config = Get-Content '%JSON_CONFIG%' | ConvertFrom-Json; $config | ForEach-Object {Write-Output $_}" > temp_repos.txt
+    powershell -Command "$config = Get-Content '!JSON_CONFIG!' | ConvertFrom-Json; $config | ForEach-Object {Write-Output $_}" > temp_repos.txt
     
 ) else (
     echo 未找到JSON配置文件，使用默认配置
     
     :: 创建临时仓库列表文件（默认配置）
-    (
-        echo https://github.com/Comfy-Org/ComfyUI-Manager.git
-    ) > temp_repos.txt
+    echo https://github.com/Comfy-Org/ComfyUI-Manager.git > temp_repos.txt
 )
 
 :: 统计仓库数量
