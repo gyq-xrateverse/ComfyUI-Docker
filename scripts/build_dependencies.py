@@ -61,7 +61,10 @@ PINNED_PACKAGES = {
     "torchvision": "0.21.0",
     "torchaudio": "2.6.0",
     "xformers": "v0.0.29.post2",
-    "numpy": "1.26.4"
+    "numpy": "1.24.4",  # 兼容mediapipe<2要求
+    "scipy": "1.12.0",  # 满足jax、scikit-image等>=1.12要求
+    "pillow": "9.5.0",   # 兼容simple-lama-inpainting<10.0.0要求
+    "timm": "0.4.12"    # 兼容torchscale要求
 }
 
 # PyTorch专用下载源
@@ -80,9 +83,11 @@ class DependencyInstaller:
         LOGGER.info("开始统一的依赖安装流程...")
         self._install_build_tools()
         self._gather_requirements()
+        self._detect_conflicts()
         self._resolve_versions()
         self._write_resolved_requirements_file()
         self._install_packages()
+        self._verify_installation()
         LOGGER.info("统一的依赖安装流程完成。")
 
     def _install_build_tools(self):
@@ -132,6 +137,30 @@ class DependencyInstaller:
 
         LOGGER.info(f"共收集到 {len(self.requirements)} 个唯一的软件包。")
 
+    def _detect_conflicts(self):
+        """预检测版本冲突并报告潜在问题。"""
+        LOGGER.info("正在预检测版本冲突...")
+        conflicts_found = 0
+        
+        for name, reqs in self.requirements.items():
+            if len(reqs) <= 1:
+                continue
+                
+            # 收集所有版本约束
+            constraints = []
+            for req in reqs:
+                for spec in req.specifier:
+                    constraints.append(f"{spec.operator}{spec.version}")
+            
+            if len(set(constraints)) > 1:
+                LOGGER.warning(f"发现 '{name}' 的版本冲突: {set(constraints)}")
+                conflicts_found += 1
+        
+        if conflicts_found > 0:
+            LOGGER.warning(f"总共发现 {conflicts_found} 个包存在版本冲突，将尝试智能解决。")
+        else:
+            LOGGER.info("未发现明显的版本冲突。")
+
     def _write_resolved_requirements_file(self):
         """将解析后的依赖项写入一个最终的requirements.txt文件以供记录。"""
         output_path = "/app/final_requirements.txt"
@@ -169,8 +198,9 @@ class DependencyInstaller:
             LOGGER.info(f"检测到多个OpenCV变体: {opencv_keys}。正在进行统一处理。")
             for key in opencv_keys:
                 del self.requirements[key]
-            # 我们将在安装阶段手动添加'opencv-contrib-python-headless'
-            MANUAL_PACKAGES.append("opencv-contrib-python-headless")
+            # 确保不重复添加opencv-contrib-python-headless
+            if "opencv-contrib-python-headless" not in MANUAL_PACKAGES:
+                MANUAL_PACKAGES.append("opencv-contrib-python-headless")
             LOGGER.info("已将所有OpenCV变体替换为 'opencv-contrib-python-headless'。")
 
 
@@ -209,9 +239,22 @@ class DependencyInstaller:
         """使用解析后的版本安装所有软件包。"""
         LOGGER.info(f"正在安装所有 {len(self.resolved_versions)} 个解析后的软件包...")
         
-        # 排序以确保torch相关的包被正确处理（如果需要），
-        # 尽管在版本固定的情况下安装顺序不应有影响。
-        sorted_packages = sorted(self.resolved_versions.keys())
+        # 按依赖层次排序：基础包 -> 科学计算包 -> 深度学习包 -> 其他包
+        base_packages = ["numpy", "scipy", "pillow"]
+        torch_packages = ["torch", "torchvision", "torchaudio", "xformers"]
+        priority_packages = ["timm", "opencv-contrib-python-headless"]
+        
+        # 构建安装顺序：基础包 -> torch包 -> 优先包 -> 其余包
+        sorted_packages = []
+        for pkg_list in [base_packages, torch_packages, priority_packages]:
+            for pkg in pkg_list:
+                if pkg in self.resolved_versions:
+                    sorted_packages.append(pkg)
+        
+        # 添加剩余的包
+        remaining = [pkg for pkg in sorted(self.resolved_versions.keys()) 
+                    if pkg not in sorted_packages]
+        sorted_packages.extend(remaining)
 
         for name in sorted_packages:
             version = self.resolved_versions[name]
@@ -235,6 +278,25 @@ class DependencyInstaller:
                 self._run_pip(["install", package_spec])
             except subprocess.CalledProcessError:
                 LOGGER.error(f"安装手动指定的软件包 {package_spec} 失败。")
+
+    def _verify_installation(self):
+        """验证已安装包的兼容性。"""
+        LOGGER.info("正在验证安装结果...")
+        try:
+            # 检查关键包是否成功安装
+            critical_packages = ["numpy", "torch", "torchvision"]
+            for pkg in critical_packages:
+                if pkg in self.resolved_versions:
+                    try:
+                        subprocess.run([sys.executable, "-c", f"import {pkg}; print(f'{pkg} version: {{{pkg}.__version__}}')"], 
+                                     check=True, capture_output=True)
+                        LOGGER.info(f"✓ {pkg} 安装验证成功")
+                    except subprocess.CalledProcessError:
+                        LOGGER.error(f"✗ {pkg} 安装验证失败")
+            
+            LOGGER.info("安装验证完成。")
+        except Exception as e:
+            LOGGER.warning(f"验证过程中出现错误: {e}")
 
 
     def _run_pip(self, args, retries=3, backoff_factor=2):
