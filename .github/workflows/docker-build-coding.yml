@@ -2,9 +2,9 @@ name: Build and Push ComfyUI Docker Image to Coding
 
 on:
   workflow_dispatch:  # Manual trigger
-  schedule:
-    # 每月3号凌晨0点运行
-    - cron: '0 0 3 * *'
+  # schedule:
+  #   # 每月3号凌晨0点运行
+  #   - cron: '0 0 3 * *'
   push:
     tags:
       - 'v*'
@@ -22,7 +22,7 @@ env:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # 标准runner，通过优化提升效率
     
     steps:
       - name: 检出代码
@@ -57,6 +57,13 @@ jobs:
         run: |
           echo "=== 清理前磁盘空间 ==="
           df -h
+          echo "=== 清理大型预装软件 ==="
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/swift
+          sudo rm -rf /opt/az
           echo "=== 清理 Docker 缓存 ==="
           docker system prune -af --volumes || true
           echo "=== 清理 APT 缓存 ==="
@@ -79,9 +86,11 @@ jobs:
             network=host
           config-inline: |
             [worker.oci]
-              max-parallelism = 1
+              max-parallelism = 2
             [worker.containerd]
-              max-parallelism = 1
+              max-parallelism = 2
+            [registry."docker.io"]
+              mirrors = ["mirror.gcr.io"]
 
       - name: 检查必需的 Secrets
         run: |
@@ -135,18 +144,26 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=${{ env.VERSION }}
 
-      - name: 监控磁盘空间
+      - name: 监控系统资源
         run: |
-          echo "=== 构建前磁盘空间检查 ==="
+          echo "=== 构建前系统资源检查 ==="
+          echo "CPU信息:"
+          nproc
+          lscpu | grep "Model name"
+          echo "内存信息:"
+          free -h
+          echo "磁盘空间:"
           df -h
           AVAILABLE_GB=$(df / | awk 'NR==2{printf "%.0f", $4/1024/1024}')
           echo "可用空间: ${AVAILABLE_GB}GB"
-          if [ $AVAILABLE_GB -lt 10 ]; then
-            echo "❌ 警告: 可用磁盘空间不足 10GB，可能导致构建失败"
+          if [ $AVAILABLE_GB -lt 15 ]; then
+            echo "❌ 警告: 可用磁盘空间不足 15GB，可能导致构建失败"
             echo "建议清理更多空间或使用更大的 runner"
           else
             echo "✅ 磁盘空间充足，可以开始构建"
           fi
+          echo "Docker版本:"
+          docker version --format '{{.Server.Version}}'
 
       - name: 构建并推送 ComfyUI Docker 镜像
         uses: docker/build-push-action@v5
@@ -161,14 +178,24 @@ jobs:
           cache-to: type=gha,mode=max,ignore-error=true
           build-args: |
             PYTHON_VERSION=3.11
-            CUDA_VERSION=12.4.1
+            CUDA_VERSION=12.1.1
             VERSION=${{ env.VERSION }}
             BUILD_DATE=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
             VCS_REF=${{ github.sha }}
           provenance: false
           sbom: false
           outputs: type=image,push=${{ github.event_name != 'pull_request' }}
-        timeout-minutes: 180
+        timeout-minutes: 240  # 增加到4小时
+        
+      - name: 构建后空间检查
+        if: always()
+        run: |
+          echo "=== 构建后磁盘空间 ==="
+          df -h
+          echo "=== Docker镜像大小 ==="
+          docker images | head -10
+          echo "=== Docker系统信息 ==="
+          docker system df
         
       - name: 手动推送镜像
         if: failure() && github.event_name != 'pull_request'
