@@ -64,7 +64,8 @@ PINNED_PACKAGES = {
     "numpy": "1.24.4",  # 兼容mediapipe<2要求
     "scipy": "1.12.0",  # 满足jax、scikit-image等>=1.12要求
     "pillow": "9.5.0",   # 兼容simple-lama-inpainting<10.0.0要求
-    "timm": "0.4.12"    # 兼容torchscale要求
+    "timm": "0.4.12",    # 兼容torchscale要求
+    "opencv-contrib-python-headless": "4.8.1.78"  # 稳定版本，避免依赖冲突
 }
 
 # PyTorch专用下载源
@@ -275,7 +276,8 @@ class DependencyInstaller:
         LOGGER.info(f"正在安装 {len(MANUAL_PACKAGES)} 个手动指定的软件包...")
         for package_spec in MANUAL_PACKAGES:
             try:
-                self._run_pip(["install", package_spec])
+                # 使用--no-deps防止意外升级已固定版本的依赖包
+                self._run_pip(["install", "--no-deps", package_spec])
             except subprocess.CalledProcessError:
                 LOGGER.error(f"安装手动指定的软件包 {package_spec} 失败。")
 
