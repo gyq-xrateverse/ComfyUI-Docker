@@ -65,7 +65,8 @@ PINNED_PACKAGES = {
     "scipy": "1.12.0",  # 满足jax、scikit-image等>=1.12要求
     "pillow": "9.5.0",   # 兼容simple-lama-inpainting<10.0.0要求
     "timm": "0.4.12",    # 兼容torchscale要求
-    "opencv-contrib-python-headless": "4.8.1.78"  # 稳定版本，避免依赖冲突
+    "opencv-contrib-python-headless": "4.8.1.78",  # 稳定版本，避免依赖冲突
+    "decord": "0.6.0"
 }
 
 # PyTorch专用下载源
