@@ -45,18 +45,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # --- Setup Python environment ---
     && ln -sf /usr/bin/python3.11 /usr/bin/python \
     && ln -sf /usr/bin/python3.11 /usr/bin/python3 \
-    && python3.11 -m venv /venv \
     # --- Cleanup ---
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Create virtual environment in separate layer to ensure persistence
+RUN python3.11 -m venv /venv --system-site-packages && \
+    /venv/bin/python -m pip install --upgrade pip
 
 # Set environment variables for Python virtual environment
 ENV PATH="/venv/bin:$PATH"
 ENV VIRTUAL_ENV="/venv"
 
-# Upgrade pip and install build tools (merged)
-RUN pip install --upgrade pip && \
-    pip install "setuptools<68" "wheel<0.41" "packaging"
+# Install build tools in virtual environment
+RUN /venv/bin/pip install "setuptools<68" "wheel<0.41" "packaging"
 
 # Set working directory
 WORKDIR /app
@@ -92,6 +94,7 @@ COPY scripts/setup_external_data.sh /app/scripts/
 COPY scripts/set_permissions.sh /app/scripts/
 COPY scripts/build_dependencies.py /app/scripts/
 COPY scripts/verify_dependencies.py /app/scripts/
+COPY scripts/check_venv.py /app/scripts/
 
 # --- 安装后操作和权限设置 (合并为单层) ---
 RUN mkdir -p /app/scripts && \
@@ -100,6 +103,7 @@ RUN mkdir -p /app/scripts && \
     chmod +x /app/scripts/set_permissions.sh && \
     chmod +x /app/scripts/build_dependencies.py && \
     chmod +x /app/scripts/verify_dependencies.py && \
+    chmod +x /app/scripts/check_venv.py && \
     # 清理自定义节点
     find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true && \
@@ -113,6 +117,10 @@ RUN mkdir -p /app/scripts && \
 # Run the unified dependency builder
 RUN python /app/scripts/build_dependencies.py
 
+# Final check: Verify virtual environment is properly embedded in image
+RUN echo "最终检查：验证虚拟环境是否正确嵌入镜像..." && \
+    python /app/scripts/check_venv.py
+
 # Set environment variables
 ENV PYTHONPATH=/app
 ENV PATH="/venv/bin:/app:${PATH}"
@@ -121,6 +129,14 @@ ENV PATH="/venv/bin:/app:${PATH}"
 COPY entrypoint.sh /app/
 RUN chmod +x /app/entrypoint.sh && \
     mkdir -p /app/models /app/output /app/user /app/temp
+
+# Verify virtual environment exists and is functional
+RUN echo "验证虚拟环境..." && \
+    ls -la /venv/ && \
+    ls -la /venv/bin/ && \
+    /venv/bin/python --version && \
+    /venv/bin/pip --version && \
+    echo "虚拟环境验证完成"
 
 # Run as root user
 
