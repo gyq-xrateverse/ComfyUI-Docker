@@ -115,7 +115,7 @@ RUN python /app/scripts/build_dependencies.py
 
 # Set environment variables
 ENV PYTHONPATH=/app
-ENV PATH="/app:${PATH}"
+ENV PATH="/venv/bin:/app:${PATH}"
 
 # Copy the entrypoint script and setup final directories (merged)
 COPY entrypoint.sh /app/
