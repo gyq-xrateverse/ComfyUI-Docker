@@ -95,6 +95,8 @@ COPY scripts/set_permissions.sh /app/scripts/
 COPY scripts/build_dependencies.py /app/scripts/
 COPY scripts/verify_dependencies.py /app/scripts/
 COPY scripts/check_venv.py /app/scripts/
+COPY scripts/fix_network_timeout.sh /app/scripts/
+COPY scripts/configure_comfyui_manager.py /app/scripts/
 
 # --- 安装后操作和权限设置 (合并为单层) ---
 RUN mkdir -p /app/scripts && \
@@ -104,6 +106,8 @@ RUN mkdir -p /app/scripts && \
     chmod +x /app/scripts/build_dependencies.py && \
     chmod +x /app/scripts/verify_dependencies.py && \
     chmod +x /app/scripts/check_venv.py && \
+    chmod +x /app/scripts/fix_network_timeout.sh && \
+    chmod +x /app/scripts/configure_comfyui_manager.py && \
     # 清理自定义节点
     find /app/custom_nodes -name ".git" -type d -exec rm -rf {} + 2>/dev/null || true && \
     find /app/custom_nodes -type f -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true && \
@@ -124,6 +128,13 @@ RUN echo "最终检查：验证虚拟环境是否正确嵌入镜像..." && \
 # Set environment variables
 ENV PYTHONPATH=/app
 ENV PATH="/venv/bin:/app:${PATH}"
+
+# Configure network proxies for China servers
+ENV GOPROXY=https://goproxy.cn,https://goproxy.io,direct
+ENV GOSUMDB=sum.golang.google.cn
+ENV GO111MODULE=on
+ENV HTTP_TIMEOUT=120
+ENV HTTPS_TIMEOUT=120
 
 # Copy the entrypoint script and setup final directories (merged)
 COPY entrypoint.sh /app/

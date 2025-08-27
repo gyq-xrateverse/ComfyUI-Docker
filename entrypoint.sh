@@ -4,6 +4,26 @@ set -e
 # 确保scripts目录存在
 mkdir -p /app/scripts
 
+# 配置网络代理解决国内服务器访问问题
+echo "🌐 配置网络代理..."
+export GOPROXY=https://goproxy.cn,https://goproxy.io,direct
+export GOSUMDB=sum.golang.google.cn
+export GO111MODULE=on
+export HTTP_TIMEOUT=120
+export HTTPS_TIMEOUT=120
+
+# 运行网络修复脚本（如果存在）
+if [ -f "/app/scripts/fix_network_timeout.sh" ]; then
+    echo "运行网络超时修复脚本..."
+    bash /app/scripts/fix_network_timeout.sh
+fi
+
+# 配置ComfyUI-Manager网络设置
+if [ -f "/app/scripts/configure_comfyui_manager.py" ]; then
+    echo "配置ComfyUI-Manager网络设置..."
+    python /app/scripts/configure_comfyui_manager.py
+fi
+
 # 设置外部数据目录
 if [ -f "/app/scripts/setup_external_data.sh" ]; then
     /app/scripts/setup_external_data.sh
